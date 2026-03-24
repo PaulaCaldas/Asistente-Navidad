@@ -253,7 +253,7 @@ Alta calidad, sin texto.
     image_base64 = img.data[0].b64_json
     image_bytes = base64.b64decode(image_base64)
 
-    st.image(image_bytes, caption="Propuesta visual generada", use_column_width=True)
+    st.image(image_bytes, caption="Propuesta visual generada", use_container_width=True)
 
 except Exception as e:
     st.write("")  # no muestra nada
