@@ -216,12 +216,14 @@ Si hay imagen:
 Responde con propuesta clara, aplicable y profesional.
 """
 
-    st.session_state.messages.append({"role": "user", "content": full_prompt})
+    st.session_state.messages.append({"role": "user", "content": user_input})
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=st.session_state.messages
-    )
+        messages=[
+    {"role": "system", "content": "Eres un director creativo experto en diseño navideño."},
+    {"role": "user", "content": full_prompt}
+]
 
     reply = response.choices[0].message.content
 
