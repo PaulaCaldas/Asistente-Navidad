@@ -3,6 +3,7 @@ from openai import OpenAI
 import PyPDF2
 from PIL import Image
 import base64
+import io
 
 import os
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
