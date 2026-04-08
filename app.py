@@ -219,48 +219,47 @@ Responde con propuesta clara, aplicable y profesional.
 
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    # --- PROCESAR IMAGEN ---
-image_content = None
+ # --- PROCESAR IMAGEN ---
+    image_content = None
 
-if uploaded_image:
-    uploaded_image.seek(0)
-    image_bytes = uploaded_image.read()
-    image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+    if uploaded_image:
+        uploaded_image.seek(0)
+        image_bytes = uploaded_image.read()
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
-    image_content = {
-        "type": "image_url",
-        "image_url": {
-            "url": f"data:image/png;base64,{image_base64}"
+        image_content = {
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/png;base64,{image_base64}"
+            }
         }
+
+    # --- CONSTRUIR MENSAJE ---
+    user_message = {
+        "role": "user",
+        "content": [
+            {
+                "type": "text",
+                "text": full_prompt
+            }
+        ]
     }
 
-# --- CONSTRUIR MENSAJE ---
-user_message = {
-    "role": "user",
-    "content": [
-        {
-            "type": "text",
-            "text": full_prompt
-        }
-    ]
-}
+    if image_content:
+        user_message["content"].append(image_content)
 
-if image_content:
-    user_message["content"].append(image_content)
+    # --- LLAMADO ---
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            user_message
+        ]
+    )
 
-# --- LLAMADO A OPENAI ---
-response = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-        {"role": "system", "content": system_prompt},
-        user_message
-    ]
-)
+    reply = response.choices[0].message.content
 
-    
-reply = response.choices[0].message.content
-
-st.chat_message("assistant").write(reply)
+    st.chat_message("assistant").write(reply)
 st.session_state.messages.append({"role": "assistant", "content": reply})
 try:
     image_prompt = f"""
