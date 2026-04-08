@@ -257,8 +257,8 @@ response = client.chat.completions.create(
     
 reply = response.choices[0].message.content
 
-    st.chat_message("assistant").write(reply)
-    st.session_state.messages.append({"role": "assistant", "content": reply})
+st.chat_message("assistant").write(reply)
+st.session_state.messages.append({"role": "assistant", "content": reply})
 try:
     image_prompt = f"""
 Render arquitectónico navideño profesional para centro comercial.
