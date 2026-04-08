@@ -238,7 +238,10 @@ if uploaded_image:
 user_message = {
     "role": "user",
     "content": [
-        {"type": "text", "text": full_prompt}
+        {
+            "type": "text",
+            "text": full_prompt
+        }
     ]
 }
 
