@@ -186,10 +186,26 @@ if user_input:
         image_note = """
 El usuario subió una imagen del espacio.
 
-Analiza como diseñador:
-- identifica si es fachada, vacío o interior
-- propone intervención con iluminación, icicle, composición
-- sé específico (no genérico)
+OBLIGATORIO:
+
+1. Describe el espacio con precisión:
+- tipo (fachada, vacío, interior)
+- cantidad de niveles o altura
+- elementos arquitectónicos visibles (barandas, columnas, circulación, locales, etc.)
+- proporciones del espacio
+
+2. Analiza cómo se comporta visualmente:
+- puntos focales
+- ejes visuales
+- zonas de mayor impacto
+
+3. Luego propone la intervención:
+- ubicación exacta de elementos
+- alturas específicas
+- densidad y distribución
+
+NO des respuestas genéricas.
+Responde como si estuvieras presentando un concepto basado en esa imagen real.
 """
 
     full_prompt = f"""
