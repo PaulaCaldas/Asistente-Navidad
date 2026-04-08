@@ -189,8 +189,8 @@ El usuario subió una imagen del espacio.
 OBLIGATORIO:
 
 1. Describe el espacio con precisión:
-- tipo (fachada, vacío, interior)
-- cantidad de niveles o altura
+- tipo (fachada, vacío, interior,, escena)
+- cantidad de niveles o altura 
 - elementos arquitectónicos visibles (barandas, columnas, circulación, locales, etc.)
 - proporciones del espacio
 
@@ -200,11 +200,24 @@ OBLIGATORIO:
 - zonas de mayor impacto
 
 3. Luego propone la intervención:
-- ubicación exacta de elementos
+- ubicación exacta de elementos (genera propuestas dinámicas, elementos colgante, formas, guirnaldas etc..)
 - alturas específicas
 - densidad y distribución
 
-NO des respuestas genéricas.
+Además:
+
+4. Justifica cada decisión de diseño:
+- por qué ese concepto
+- por qué esos elementos
+- qué impacto genera en el usuario
+
+5. Usa lenguaje de presentación comercial:
+- debe sonar como pitch
+- convincente y vendible
+
+6. Evita propuestas genéricas:
+- todo debe responder al espacio analizado
+
 Responde como si estuvieras presentando un concepto basado en esa imagen real.
 """
 
