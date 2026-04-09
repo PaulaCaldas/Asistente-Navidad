@@ -257,200 +257,203 @@ if user_input:
         "content": user_input
     })
 
-    # -------- PROMPT LIMPIO --------
+    # -------- PROMPT --------
     image_note = ""
 
-# 🔹 CASO 1: DOS IMÁGENES
+    # 🔹 CASO 1: DOS IMÁGENES
     if uploaded_image and uploaded_reference:
-    image_note = (
-        "El usuario subió dos imágenes:\n"
-        "1. Imagen del espacio\n"
-        "2. Imagen de elementos decorativos\n\n"
+        image_note = (
+            "El usuario subió dos imágenes:\n"
+            "1. Imagen del espacio\n"
+            "2. Imagen de elementos decorativos\n\n"
 
-        "OBLIGATORIO:\n\n"
+            "OBLIGATORIO:\n\n"
 
-        "1. Describe el espacio con precisión:\n"
-        "- tipo (fachada, vacío, interior, escena)\n"
-        "- cantidad de niveles o altura\n"
-        "- elementos arquitectónicos visibles\n"
-        "- proporciones del espacio\n\n"
+            "1. Describe el espacio con precisión:\n"
+            "- tipo (fachada, vacío, interior, escena)\n"
+            "- cantidad de niveles o altura\n"
+            "- elementos arquitectónicos visibles\n"
+            "- proporciones del espacio\n\n"
 
-        "2. Analiza cómo se comporta visualmente:\n"
-        "- puntos focales\n"
-        "- ejes visuales\n"
-        "- zonas de mayor impacto\n\n"
+            "2. Analiza cómo se comporta visualmente:\n"
+            "- puntos focales\n"
+            "- ejes visuales\n"
+            "- zonas de mayor impacto\n\n"
 
-        "3. Analiza los elementos decorativos:\n"
-        "- tipo de elemento\n"
-        "- material aparente\n"
-        "- escala y proporción\n"
-        "- estilo\n\n"
+            "3. Analiza los elementos decorativos:\n"
+            "- tipo de elemento\n"
+            "- material aparente\n"
+            "- escala y proporción\n"
+            "- estilo\n\n"
 
-        "4. Propón la integración:\n"
-        "- ubicación exacta\n"
-        "- alturas específicas\n"
-        "- densidad y distribución\n"
-        "- relación con la arquitectura\n\n"
+            "4. Propón la integración:\n"
+            "- ubicación exacta\n"
+            "- alturas específicas\n"
+            "- densidad y distribución\n"
+            "- relación con la arquitectura\n\n"
 
-        "5. Justifica decisiones\n"
-        "6. Usa lenguaje comercial\n"
-        "7. Evita propuestas genéricas\n\n"
+            "5. Justifica decisiones\n"
+            "6. Usa lenguaje comercial\n"
+            "7. Evita propuestas genéricas\n\n"
 
-        "Responde como un pitch profesional."
+            "Responde como un pitch profesional."
+        )
+
+    # 🔹 CASO 2: SOLO ESPACIO
+    elif uploaded_image:
+        image_note = (
+            "El usuario subió una imagen del espacio.\n\n"
+
+            "OBLIGATORIO:\n\n"
+
+            "1. Describe el espacio:\n"
+            "- tipo\n"
+            "- niveles\n"
+            "- arquitectura\n"
+            "- proporciones\n\n"
+
+            "2. Analiza comportamiento visual:\n"
+            "- puntos focales\n"
+            "- ejes\n"
+            "- impacto\n\n"
+
+            "3. Propón intervención:\n"
+            "- ubicación\n"
+            "- alturas\n"
+            "- distribución\n\n"
+
+            "4. Justifica decisiones\n"
+            "5. Lenguaje comercial\n"
+            "6. Evita lo genérico\n\n"
+
+            "Responde como diseñador profesional."
+        )
+
+    # 🔹 CASO 3: SIN IMÁGENES
+    else:
+        image_note = (
+            "El usuario no subió imágenes.\n\n"
+
+            "OBLIGATORIO:\n\n"
+
+            "1. Pregunta que proyecto quiere revisar:\n"
+            "- narrativa\n"
+            "- estilo (tradicional, elegante, mágico, etc.)\n"
+            "- intención del espacio\n\n"
+
+            "Evita propuestas genéricas. Responde como diseñador experto."
+        )
+
+    # -------- FULL PROMPT --------
+    full_prompt = (
+        f"Usuario dice:\n{str(user_input)}\n\n"
+        f"Contenido del PDF:\n{str(pdf_text)}\n\n"
+        f"{image_note}\n\n"
+        "Actúa como director creativo senior especializado en diseño navideño.\n"
+        "No des ideas genéricas.\n"
+        "Usa materiales reales.\n"
+        "Justifica decisiones.\n"
     )
-
-# 🔹 CASO 2: SOLO ESPACIO
-elif uploaded_image:
-    image_note = (
-        "El usuario subió una imagen del espacio.\n\n"
-
-        "OBLIGATORIO:\n\n"
-
-        "1. Describe el espacio:\n"
-        "- tipo\n"
-        "- niveles\n"
-        "- arquitectura\n"
-        "- proporciones\n\n"
-
-        "2. Analiza comportamiento visual:\n"
-        "- puntos focales\n"
-        "- ejes\n"
-        "- impacto\n\n"
-
-        "3. Propón intervención:\n"
-        "- ubicación\n"
-        "- alturas\n"
-        "- distribución\n\n"
-
-        "4. Justifica decisiones\n"
-        "5. Lenguaje comercial\n"
-        "6. Evita lo genérico\n\n"
-
-        "Responde como diseñador profesional."
-    )
-else:
-    image_note = (
-        "El usuario no subió imágenes.\n\n"
-
-        "OBLIGATORIO:\n\n"
-
-        "1. Pregunta que proyecto quiere revisar:\n"
-        "- narrativa\n"
-        "- estilo (tradicional, elegante, mágico, etc.)\n"
-        "- intención del espacio\n\n"
-
-        "Evita propuestas genéricas. Responde como diseñador experto."
-    )
-
-full_prompt = (
-    f"Usuario dice:\n{str(user_input)}\n\n"
-    f"Contenido del PDF:\n{str(pdf_text)}\n\n"
-    f"{image_note}\n\n"
-    "Actúa como director creativo senior especializado en diseño navideño.\n"
-    "No des ideas genéricas.\n"
-    "Usa materiales reales.\n"
-    "Justifica decisiones.\n"
-)
 
     # -------- IMÁGENES --------
-    
-image_content = []
+    image_content = []
 
-if uploaded_image:
-    uploaded_image.seek(0)
-    image_bytes = uploaded_image.read()
-    image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+    if uploaded_image:
+        uploaded_image.seek(0)
+        image_bytes = uploaded_image.read()
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
-    image_content.append({
-        "type": "image_url",
-        "image_url": {
-            "url": f"data:image/png;base64,{image_base64}"
-        }
-    })
+        image_content.append({
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/png;base64,{image_base64}"
+            }
+        })
 
-if uploaded_reference:
-    uploaded_reference.seek(0)
-    ref_bytes = uploaded_reference.read()
-    ref_base64 = base64.b64encode(ref_bytes).decode("utf-8")
+    if uploaded_reference:
+        uploaded_reference.seek(0)
+        ref_bytes = uploaded_reference.read()
+        ref_base64 = base64.b64encode(ref_bytes).decode("utf-8")
 
-    image_content.append({
-        "type": "image_url",
-        "image_url": {
-            "url": f"data:image/png;base64,{ref_base64}"
-        }
-    })
+        image_content.append({
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/png;base64,{ref_base64}"
+            }
+        })
+
     # -------- MENSAJE --------
-user_message = {
-    "role": "user",
-    "content": [
-        {
-            "type": "text",
-            "text": full_prompt
-        }
-    ]
-}
+    user_message = {
+        "role": "user",
+        "content": [
+            {
+                "type": "text",
+                "text": full_prompt
+            }
+        ]
+    }
 
-# 5. agregar imágenes
-for img in image_content:
-    user_message["content"].append(img)
-        
-import time
+    for img in image_content:
+        user_message["content"].append(img)
 
-# --- CONTROL DE USO ---
-if "last_request" not in st.session_state:
-    st.session_state.last_request = 0
+    # -------- CONTROL USO --------
+    import time
 
-current_time = time.time()
+    if "last_request" not in st.session_state:
+        st.session_state.last_request = 0
 
-if current_time - st.session_state.last_request < 3:
-    st.warning("⏳ Espera un momento antes de enviar otra solicitud")
-    st.stop()
+    current_time = time.time()
 
-st.session_state.last_request = current_time
+    if current_time - st.session_state.last_request < 3:
+        st.warning("⏳ Espera un momento antes de enviar otra solicitud")
+        st.stop()
+
+    st.session_state.last_request = current_time
 
     # -------- OPENAI --------
-try:
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            user_message
-        ]
-    )
-
-    reply = response.choices[0].message.content
-
-    st.chat_message("assistant").write(reply)
-    st.session_state.messages.append({"role": "assistant", "content": reply})
-
-except Exception as e:
-    st.write(e)
-# --- DETECTAR TABLA ---
-if "reply" in locals() and "|" in reply:
     try:
-        lines = reply.split("\n")
-        table_lines = [line for line in lines if "|" in line]
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                user_message
+            ]
+        )
 
-        if len(table_lines) > 2:
-            headers = table_lines[0].split("|")
-            headers = [h.strip() for h in headers if h.strip()]
+        reply = response.choices[0].message.content
 
-            data = []
-            for row in table_lines[2:]:
-                cols = row.split("|")
-                cols = [c.strip() for c in cols if c.strip()]
-                if len(cols) == len(headers):
-                    data.append(cols)
+        st.chat_message("assistant").write(reply)
+        st.session_state.messages.append({"role": "assistant", "content": reply})
 
-            df = pd.DataFrame(data, columns=headers)
-            st.dataframe(df)
+    except Exception as e:
+        st.error(f"Error: {e}")
 
-    except:
-        pass
-if "reply" in locals():
-    st.session_state.messages.append({"role": "assistant", "content": reply})
-try:
-    image_prompt = f"""
+    # -------- TABLAS --------
+    if "reply" in locals() and "|" in reply:
+        try:
+            lines = reply.split("\n")
+            table_lines = [line for line in lines if "|" in line]
+
+            if len(table_lines) > 2:
+                headers = table_lines[0].split("|")
+                headers = [h.strip() for h in headers if h.strip()]
+
+                data = []
+                for row in table_lines[2:]:
+                    cols = row.split("|")
+                    cols = [c.strip() for c in cols if c.strip()]
+                    if len(cols) == len(headers):
+                        data.append(cols)
+
+                df = pd.DataFrame(data, columns=headers)
+                st.dataframe(df)
+
+        except:
+            pass
+
+    # -------- IMAGEN IA --------
+    try:
+        image_prompt = f"""
 Render arquitectónico navideño profesional para centro comercial.
 
 Basado en esta propuesta:
@@ -466,16 +469,17 @@ Debe incluir:
 Alta calidad, sin texto.
 """
 
-    img = client.images.generate(
-        model="gpt-image-1",
-        prompt=image_prompt,
-        size="1024x1024"
-    )
+        img = client.images.generate(
+            model="gpt-image-1",
+            prompt=image_prompt,
+            size="1024x1024"
+        )
 
-    image_base64 = img.data[0].b64_json
-    image_bytes = base64.b64decode(image_base64)
+        image_base64 = img.data[0].b64_json
+        image_bytes = base64.b64decode(image_base64)
 
-    st.image(image_bytes, caption="Propuesta visual generada", use_container_width=True)
+        st.image(image_bytes, caption="Propuesta visual generada", use_container_width=True)
 
+    
 except Exception as e:
     st.write("")  # no muestra nada
