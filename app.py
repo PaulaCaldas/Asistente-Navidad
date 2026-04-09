@@ -261,7 +261,7 @@ if user_input:
     image_note = ""
 
 # 🔹 CASO 1: DOS IMÁGENES
-if uploaded_image and uploaded_reference:
+    if uploaded_image and uploaded_reference:
     image_note = (
         "El usuario subió dos imágenes:\n"
         "1. Imagen del espacio\n"
@@ -357,29 +357,28 @@ full_prompt = (
 image_content = []
 
 if uploaded_image:
-        uploaded_image.seek(0)
-        image_bytes = uploaded_image.read()
-        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+    uploaded_image.seek(0)
+    image_bytes = uploaded_image.read()
+    image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
-        image_content.append({
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/png;base64,{image_base64}"
-            }
-        })
+    image_content.append({
+        "type": "image_url",
+        "image_url": {
+            "url": f"data:image/png;base64,{image_base64}"
+        }
+    })
 
-    if uploaded_reference:
-        uploaded_reference.seek(0)
-        ref_bytes = uploaded_reference.read()
-        ref_base64 = base64.b64encode(ref_bytes).decode("utf-8")
+if uploaded_reference:
+    uploaded_reference.seek(0)
+    ref_bytes = uploaded_reference.read()
+    ref_base64 = base64.b64encode(ref_bytes).decode("utf-8")
 
-        image_content.append({
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/png;base64,{ref_base64}"
-            }
-        })
-
+    image_content.append({
+        "type": "image_url",
+        "image_url": {
+            "url": f"data:image/png;base64,{ref_base64}"
+        }
+    })
     # -------- MENSAJE --------
 user_message = {
     "role": "user",
