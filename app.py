@@ -330,14 +330,13 @@ elif uploaded_image:
     )
 
     full_prompt = (
-    "Usuario dice:\n" + user_input + "\n\n" +
-    "Contenido del PDF:\n" + pdf_text + "\n\n" +
-    image_note + "\n\n" +
+    f"Usuario dice:\n{str(user_input)}\n\n"
+    f"Contenido del PDF:\n{str(pdf_text)}\n\n"
+    f"{image_note}\n\n"
     "Actúa como director creativo senior especializado en diseño navideño.\n"
-    "NO des ideas genéricas.\n"
-    "SIEMPRE usa materiales reales de producción.\n"
-    "Justifica cada decisión.\n"
-    "Estructura la respuesta como propuesta comercial.\n"
+    "No des ideas genéricas.\n"
+    "Usa materiales reales.\n"
+    "Justifica decisiones.\n"
 )
 
     # -------- IMÁGENES --------
