@@ -435,7 +435,7 @@ if user_input:
             reply = "No se pudo generar respuesta"
             
         st.chat_message("assistant").write(reply)
-        st.session_state.messages.append({"role": "assistant", "content": reply})}
+        st.session_state.messages.append({"role": "assistant", "content": reply})
         
         with open(HISTORY_FILE, "w") as f:
             json.dump(st.session_state.messages, f)
