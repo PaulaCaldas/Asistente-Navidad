@@ -324,8 +324,6 @@ Responde con propuesta clara, aplicable y profesional.
 
     reply = response.choices[0].message.content
 
-    import pandas as pd
-
 st.chat_message("assistant").write(reply)
 
 # --- DETECTAR TABLA ---
