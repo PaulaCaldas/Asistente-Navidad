@@ -377,18 +377,17 @@ user_message = {
 for img in image_content:
     user_message["content"].append(img)
 
-    # --- LLAMADO ---
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            user_message
-        ]
-    )
 
-    reply = response.choices[0].message.content
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": system_prompt},
+        user_message
+    ]
+)
 
-    st.chat_message("assistant").write(reply)
+reply = response.choices[0].message.content
+st.chat_message("assistant").write(reply)
 
 # --- DETECTAR TABLA ---
 if "reply" in locals() and "|" in reply:
