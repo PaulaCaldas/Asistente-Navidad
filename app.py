@@ -250,31 +250,17 @@ if user_input:
 
     # Mostrar input
     st.chat_message("user").write(user_input)
-
+    st.session_state.messages.append({
+        "role": "user",
+        "content": user_input
+    })
     # Construir prompt completo
     image_note = ""
-    full_prompt = f"""
-Usuario dice:
-{user_input}
 
---- CONTEXTO DEL PROYECTO ---
-
-Contenido del PDF:
-{pdf_text}
-
-{image_note}
-
---- INSTRUCCIONES ---
-
-Actúa como director creativo experto en diseño navideño.
-
-Analiza el espacio y genera una propuesta profesional, clara y vendible.
-"""
-    
     # 🔹 CASO 1: DOS IMÁGENES
-if uploaded_image and uploaded_reference:
-    image_note = """
-El usuario subió DOS imágenes:
+    if uploaded_image and uploaded_reference:
+        image_note = """ 
+        El usuario subió DOS imágenes:
 
 1. Imagen del espacio
 2. Imagen de elementos decorativos
@@ -321,9 +307,9 @@ Además:
 Responde como si estuvieras presentando un concepto basado en ambas imágenes.
 """
 
-# 🔹 CASO 2: SOLO ESPACIO
-elif uploaded_image:
-    image_note = """
+    # 🔹 CASO 2: SOLO ESPACIO
+    elif uploaded_image:
+        image_note = """
 El usuario subió una imagen del espacio.
 
 OBLIGATORIO:
@@ -352,7 +338,24 @@ Además:
 
 Responde como diseñador profesional.
 """
-    st.session_state.messages.append({"role": "user", "content": user_input})
+
+    full_prompt = f"""
+Usuario dice:
+{user_input}
+
+--- CONTEXTO DEL PROYECTO ---
+
+Contenido del PDF:
+{pdf_text}
+
+{image_note}
+
+--- INSTRUCCIONES ---
+
+Actúa como director creativo experto en diseño navideño.
+
+Analiza el espacio y genera una propuesta profesional, clara y vendible.
+"""
 
  # --- PROCESAR IMAGEN ---
 image_content = []
