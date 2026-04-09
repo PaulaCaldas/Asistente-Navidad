@@ -4,6 +4,7 @@ import PyPDF2
 from PIL import Image
 import base64
 import io
+import pandas as pd
 
 import os
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -323,7 +324,32 @@ Responde con propuesta clara, aplicable y profesional.
 
     reply = response.choices[0].message.content
 
-    st.chat_message("assistant").write(reply)
+    import pandas as pd
+
+st.chat_message("assistant").write(reply)
+
+# --- DETECTAR TABLA ---
+if "|" in reply:
+    try:
+        lines = reply.split("\n")
+        table_lines = [line for line in lines if "|" in line]
+
+        if len(table_lines) > 2:
+            headers = table_lines[0].split("|")
+            headers = [h.strip() for h in headers if h.strip()]
+
+            data = []
+            for row in table_lines[2:]:
+                cols = row.split("|")
+                cols = [c.strip() for c in cols if c.strip()]
+                if len(cols) == len(headers):
+                    data.append(cols)
+
+            df = pd.DataFrame(data, columns=headers)
+            st.dataframe(df)
+
+    except:
+        pass
 if "reply" in locals():
     st.session_state.messages.append({"role": "assistant", "content": reply})
 try:
