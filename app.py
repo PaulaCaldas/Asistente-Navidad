@@ -65,6 +65,14 @@ selected_chat = st.selectbox(
     "💼 Proyecto",
     ["nuevo"] + chat_files
 )
+# Detectar cambio de proyecto
+if "current_chat" not in st.session_state:
+    st.session_state.current_chat = selected_chat
+
+if st.session_state.current_chat != selected_chat:
+    st.session_state.current_chat = selected_chat
+    st.session_state.messages = []
+    
 # Definir archivo de historial según selección
 if selected_chat == "nuevo":
     chat_name = st.text_input("Nombre del proyecto")
@@ -233,7 +241,7 @@ OBJETIVO:
 Desarrollar propuestas creativas adaptadas a cada cliente, manteniendo criterio profesional, coherencia conceptual y calidad visual.
 """
 # 🧠 MEMORIA
-if "messages" not in st.session_state:
+if "messages" not in st.session_state or not st.session_state.messages:
 
     if HISTORY_FILE and os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE, "r") as f:
