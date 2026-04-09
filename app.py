@@ -367,7 +367,7 @@ elif uploaded_image:
         })
 
     # -------- MENSAJE --------
-user_message = {
+    user_message = {
     "role": "user",
     "content": [
         {
