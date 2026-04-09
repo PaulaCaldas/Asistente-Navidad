@@ -324,7 +324,7 @@ Responde con propuesta clara, aplicable y profesional.
 
     reply = response.choices[0].message.content
 
-st.chat_message("assistant").write(reply)
+    st.chat_message("assistant").write(reply)
 
 # --- DETECTAR TABLA ---
 if "|" in reply:
