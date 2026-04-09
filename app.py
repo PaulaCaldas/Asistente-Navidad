@@ -5,6 +5,9 @@ from PIL import Image
 import base64
 import io
 import pandas as pd
+import json
+
+HISTORY_FILE = "chat_history.json"
 
 import os
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -210,9 +213,13 @@ Desarrollar propuestas creativas adaptadas a cada cliente, manteniendo criterio 
 """
 # 🧠 MEMORIA
 if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "system", "content": system_prompt}
-    ]
+    try:
+        with open(HISTORY_FILE, "r") as f:
+            st.session_state.messages = json.load(f)
+    except:
+        st.session_state.messages = [
+            {"role": "system", "content": system_prompt}
+        ]
 
 # 📎 EXPANDER PARA ARCHIVOS
 with st.expander("📎 Adjuntar archivos del proyecto"):
@@ -428,8 +435,10 @@ if user_input:
             reply = "No se pudo generar respuesta"
             
         st.chat_message("assistant").write(reply)
-        st.session_state.messages.append({"role": "assistant", "content": reply})
-
+        st.session_state.messages.append({"role": "assistant", "content": reply})}
+        
+        with open(HISTORY_FILE, "w") as f:
+            json.dump(st.session_state.messages, f)
     except Exception as e:
         st.error(f"Error: {e}")
 
