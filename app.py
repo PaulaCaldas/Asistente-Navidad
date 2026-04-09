@@ -260,11 +260,74 @@ if user_input:
     # -------- PROMPT LIMPIO --------
     image_note = ""
 
-    if uploaded_image and uploaded_reference:
-        image_note = "El usuario subió dos imágenes: espacio + elementos. Debes integrarlos."
+# 🔹 CASO 1: DOS IMÁGENES
+if uploaded_image and uploaded_reference:
+    image_note = (
+        "El usuario subió dos imágenes:\n"
+        "1. Imagen del espacio\n"
+        "2. Imagen de elementos decorativos\n\n"
 
-    elif uploaded_image:
-        image_note = "El usuario subió una imagen del espacio. Analiza el espacio."
+        "OBLIGATORIO:\n\n"
+
+        "1. Describe el espacio con precisión:\n"
+        "- tipo (fachada, vacío, interior, escena)\n"
+        "- cantidad de niveles o altura\n"
+        "- elementos arquitectónicos visibles\n"
+        "- proporciones del espacio\n\n"
+
+        "2. Analiza cómo se comporta visualmente:\n"
+        "- puntos focales\n"
+        "- ejes visuales\n"
+        "- zonas de mayor impacto\n\n"
+
+        "3. Analiza los elementos decorativos:\n"
+        "- tipo de elemento\n"
+        "- material aparente\n"
+        "- escala y proporción\n"
+        "- estilo\n\n"
+
+        "4. Propón la integración:\n"
+        "- ubicación exacta\n"
+        "- alturas específicas\n"
+        "- densidad y distribución\n"
+        "- relación con la arquitectura\n\n"
+
+        "5. Justifica decisiones\n"
+        "6. Usa lenguaje comercial\n"
+        "7. Evita propuestas genéricas\n\n"
+
+        "Responde como un pitch profesional."
+    )
+
+# 🔹 CASO 2: SOLO ESPACIO
+elif uploaded_image:
+    image_note = (
+        "El usuario subió una imagen del espacio.\n\n"
+
+        "OBLIGATORIO:\n\n"
+
+        "1. Describe el espacio:\n"
+        "- tipo\n"
+        "- niveles\n"
+        "- arquitectura\n"
+        "- proporciones\n\n"
+
+        "2. Analiza comportamiento visual:\n"
+        "- puntos focales\n"
+        "- ejes\n"
+        "- impacto\n\n"
+
+        "3. Propón intervención:\n"
+        "- ubicación\n"
+        "- alturas\n"
+        "- distribución\n\n"
+
+        "4. Justifica decisiones\n"
+        "5. Lenguaje comercial\n"
+        "6. Evita lo genérico\n\n"
+
+        "Responde como diseñador profesional."
+    )
 
     full_prompt = (
     "Usuario dice:\n" + user_input + "\n\n" +
