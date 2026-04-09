@@ -353,7 +353,8 @@ full_prompt = (
 )
 
     # -------- IMÁGENES --------
-    image_content = []
+    
+image_content = []
 
     if uploaded_image:
         uploaded_image.seek(0)
