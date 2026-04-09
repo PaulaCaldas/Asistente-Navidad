@@ -480,6 +480,5 @@ Alta calidad, sin texto.
 
         st.image(image_bytes, caption="Propuesta visual generada", use_container_width=True)
 
-    
-except Exception as e:
-    st.write("")  # no muestra nada
+    except Exception as e:
+        st.write("")  # no muestra nada
