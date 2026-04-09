@@ -458,6 +458,7 @@ if user_input:
 
 
     # -------- GENERAR IMAGEN CON OPENAI --------
+        # -------- GENERAR IMAGEN CON OPENAI --------
     try:
         image_prompt = f"""
 Render hiperrealista de un centro comercial intervenido con decoración navideña.
@@ -483,9 +484,22 @@ render tipo fotografía profesional, iluminación cinematográfica, ultra realis
             size="1024x1024"
         )
 
-        image_url = image.data[0].url
+        # 🔥 VALIDACIÓN CLAVE
+        if image and image.data and len(image.data) > 0:
 
-        st.image(image_url, caption="Propuesta generada", use_container_width=True)
+            if hasattr(image.data[0], "url") and image.data[0].url:
+                st.image(image.data[0].url, caption="Propuesta generada", use_container_width=True)
+
+            elif hasattr(image.data[0], "b64_json"):
+                import base64
+                img_bytes = base64.b64decode(image.data[0].b64_json)
+                st.image(img_bytes, caption="Propuesta generada", use_container_width=True)
+
+            else:
+                st.warning("⚠️ La imagen no se pudo procesar correctamente.")
+
+        else:
+            st.warning("⚠️ No se generó imagen.")
 
     except Exception as e:
         st.error(f"Error generando imagen: {e}")
