@@ -338,14 +338,8 @@ Además:
 
 Responde como diseñador profesional.
 """
+full_prompt = f"Usuario dice:\n{user_input}\n\nContenido del PDF:\n{pdf_text}\n\n{image_note}\n\nActúa como director creativo experto en diseño navideño. Genera una propuesta clara, profesional y aplicable."
 
-full_prompt = (
-    f"Usuario dice:\n{user_input}\n\n"
-    f"Contenido del PDF:\n{pdf_text}\n\n"
-    f"{image_note}\n\n"
-    f"Actúa como director creativo experto en diseño navideño.\n"
-    f"Genera una propuesta clara, profesional y aplicable."
-)
 
  # --- PROCESAR IMAGEN ---
 image_content = []
