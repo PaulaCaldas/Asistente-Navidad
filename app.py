@@ -376,6 +376,20 @@ elif uploaded_image:
 
     for img in image_content:
         user_message["content"].append(img)
+        
+import time
+
+# --- CONTROL DE USO ---
+if "last_request" not in st.session_state:
+    st.session_state.last_request = 0
+
+current_time = time.time()
+
+if current_time - st.session_state.last_request < 3:
+    st.warning("⏳ Espera un momento antes de enviar otra solicitud")
+    st.stop()
+
+st.session_state.last_request = current_time
 
     # -------- OPENAI --------
 try:
