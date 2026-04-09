@@ -8,7 +8,7 @@ import pandas as pd
 
 import os
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
+
 # 🎨 ESTILOS (FONDO NUDE + CHAT BONITO)
 st.markdown("""
 <style>
@@ -434,7 +434,7 @@ if user_input:
         st.error(f"Error: {e}")
 
     # -------- TABLAS --------
-    if "reply" in locals() and "|" in reply:
+    if reply and "|" in reply:
         try:
             lines = reply.split("\n")
             table_lines = [line for line in lines if "|" in line]
