@@ -455,18 +455,40 @@ if user_input:
     try:
         image_prompt = f"""
 Render arquitectónico navideño profesional para centro comercial.
+CONTEXTO:
+El usuario subió un espacio real (centro comercial) y se diseñó una propuesta navideña.
 
 Basado en esta propuesta:
 {reply}
 
-Debe incluir:
-- iluminación navideña realista
-- uso de icicle y cortinas de luz si aplica
-- composición atractiva
-- estilo render tipo Keyshot
-- ambiente comercial
+INSTRUCCIONES VISUALES:
 
-Alta calidad, sin texto.
+- Mantener proporciones reales de arquitectura comercial
+- Integrar decoración navideña dentro del espacio (no flotando)
+- Escala realista (personas, barandas, niveles)
+
+ILUMINACIÓN:solo si el usuario lo pide generar en la imagen
+- luz cálida navideña (2700K–3000K)
+- icicle en bordes superiores si aplica
+- cortinas de luz con caída natural
+
+MATERIALES:
+- acabados premium
+- acrílicos, metal, fibra de vidrio
+- nada de materiales simples
+
+ESTILO:
+- render tipo Keyshot
+- hiperrealista
+- iluminación cinematográfica
+- profundidad y atmósfera
+
+COMPOSICIÓN:
+- vista amplia del espacio
+- punto focal claro
+- elementos instagrameables
+
+Alta calidad, sin texto, sin watermark.
 """
 
         img = client.images.generate(
