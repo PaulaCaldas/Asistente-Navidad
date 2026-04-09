@@ -327,7 +327,7 @@ Responde con propuesta clara, aplicable y profesional.
     st.chat_message("assistant").write(reply)
 
 # --- DETECTAR TABLA ---
-if "|" in reply:
+if "reply" in locals() and "|" in reply:
     try:
         lines = reply.split("\n")
         table_lines = [line for line in lines if "|" in line]
