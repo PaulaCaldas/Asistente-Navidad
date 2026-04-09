@@ -367,12 +367,15 @@ elif uploaded_image:
         })
 
     # -------- MENSAJE --------
-    user_message = {
-        "role": "user",
-        "content": [
-            {"type": "text", "text": full_prompt}
-        ]
-    }
+user_message = {
+    "role": "user",
+    "content": [
+        {
+            "type": "text",
+            "text": full_prompt
+        }
+    ]
+}
 
     for img in image_content:
         user_message["content"].append(img)
