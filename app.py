@@ -9,6 +9,7 @@ import replicate
 
 import os
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 # 🎨 ESTILOS (FONDO NUDE + CHAT BONITO)
 st.markdown("""
 <style>
@@ -452,56 +453,44 @@ if user_input:
         except:
             pass
 
-    # -------- IMAGEN IA --------
+    # -------- IMAGEN IA (INTERVENCIÓN REAL) --------
     try:
-        image_prompt = f"""
-Render arquitectónico navideño profesional para centro comercial.
-CONTEXTO:
-El usuario subió un espacio real (centro comercial) y se diseñó una propuesta navideña.
+        if uploaded_image:
 
-Basado en esta propuesta:
+            uploaded_image.seek(0)
+            image_bytes = uploaded_image.read()
+
+            image_prompt = f"""
+Intervenir esta imagen de un centro comercial con decoración navideña profesional.
+
+PROPUESTA:
 {reply}
 
-INSTRUCCIONES VISUALES:
+INSTRUCCIONES:
+- Mantener arquitectura original EXACTA
+- No deformar estructura
+- Integrar decoración en barandas, columnas y bordes
+- Iluminación realista (icicle, cortinas de luz)
+- Materiales premium (acrílico, metal, fibra de vidrio)
+- Escala realista
+- Nada flotando
 
-- Mantener proporciones reales de arquitectura comercial
-- Integrar decoración navideña dentro del espacio (no flotando)
-- Escala realista (personas, barandas, niveles)
-
-ILUMINACIÓN:solo si el usuario lo pide generar en la imagen
-- luz cálida navideña (2700K–3000K)
-- icicle en bordes superiores si aplica
-- cortinas de luz con caída natural
-
-MATERIALES:
-- acabados premium
-- acrílicos, metal, fibra de vidrio
-- nada de materiales simples
-
-ESTILO:
-- render tipo Keyshot
-- hiperrealista
-- iluminación cinematográfica
-- profundidad y atmósfera
-
-COMPOSICIÓN:
-- vista amplia del espacio
-- punto focal claro
-- elementos instagrameables
-
-Alta calidad, sin texto, sin watermark.
+Estilo:
+render hiperrealista tipo Keyshot, iluminación cinematográfica.
 """
 
-        img = client.images.generate(
-            model="gpt-image-1",
-            prompt=image_prompt,
-            size="1024x1024"
-        )
+            output = replicate.run(
+                "stability-ai/stable-diffusion",
+                input={
+                    "image": image_bytes,
+                    "prompt": image_prompt,
+                    "strength": 0.7,
+                    "guidance_scale": 7.5,
+                    "num_inference_steps": 30
+                }
+            )
 
-        image_base64 = img.data[0].b64_json
-        image_bytes = base64.b64decode(image_base64)
-
-        st.image(image_bytes, caption="Propuesta visual generada", use_container_width=True)
+            st.image(output[0], caption="Propuesta intervenida", use_container_width=True)
 
     except Exception as e:
-        st.write("")  # no muestra nada
+        st.write(e)
