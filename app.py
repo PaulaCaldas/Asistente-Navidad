@@ -489,7 +489,7 @@ render hiperrealista tipo Keyshot, iluminación cinematográfica.
             # Enviar a replicate correctamente
             with open(temp_path, "rb") as f:
                 output = replicate.run(
-                    "stability-ai/stable-diffusion",
+                    "stability-ai/sdxl-img2img",
                     input={
                         "image": f,
                         "prompt": image_prompt,
