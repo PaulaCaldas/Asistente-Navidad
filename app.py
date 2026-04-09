@@ -5,6 +5,7 @@ from PIL import Image
 import base64
 import io
 import pandas as pd
+import replicate
 
 import os
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
