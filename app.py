@@ -46,7 +46,7 @@ h1 {
 # 🎄 TÍTULO PERSONALIZADO
 st.title("✨ Tu mano derecha para crear Navidad")
 st.write("Tu asistente creativo para conceptos, storytelling y diseño navideño en centros comerciales.")
-
+st.write(st.secrets["REPLICATE_API_TOKEN"])
 # 🧠 SYSTEM (TU ADN)
 system_prompt = """
 Eres un director creativo senior especializado en diseño navideño para centros comerciales en Latinoamérica.
