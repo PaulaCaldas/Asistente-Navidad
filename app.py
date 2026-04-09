@@ -542,19 +542,22 @@ render tipo fotografía profesional, iluminación cinematográfica, ultra realis
 
             import base64
 
-            # 🔥 tomar base64 SIEMPRE
             img_base64 = image.data[0].b64_json
             img_bytes = base64.b64decode(img_base64)
 
-            # Mostrar imagen
             st.image(img_bytes, caption="Propuesta generada", use_container_width=True)
 
-            # 🔥 guardar en historial
+            # 🔥 GUARDAR MENSAJE + IMAGEN
             st.session_state.messages.append({
                 "role": "assistant",
                 "content": reply,
                 "image": img_base64
             })
+
+            # 🔥 GUARDAR EN ARCHIVO (AQUÍ, NO ANTES)
+            if HISTORY_FILE:
+                with open(HISTORY_FILE, "w") as f:
+                    json.dump(st.session_state.messages, f)
             
         else:
             st.warning("⚠️ No se generó imagen")
