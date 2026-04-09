@@ -407,7 +407,7 @@ try:
     st.session_state.messages.append({"role": "assistant", "content": reply})
 
 except Exception as e:
-    st.error("⚠️ El sistema está recibiendo muchas solicitudes. Intenta de nuevo en unos segundos.")
+    st.write(e)
 # --- DETECTAR TABLA ---
 if "reply" in locals() and "|" in reply:
     try:
