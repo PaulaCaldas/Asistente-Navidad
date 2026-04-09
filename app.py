@@ -421,8 +421,12 @@ if user_input:
             ]
         )
 
-        reply = response.choices[0].message.content if response else "Error generando respuesta"
-
+        reply = ""
+        if response and response.choices:
+            reply = response.choices[0].message.content
+        else:
+            reply = "No se pudo generar respuesta"
+            
         st.chat_message("assistant").write(reply)
         st.session_state.messages.append({"role": "assistant", "content": reply})
 
