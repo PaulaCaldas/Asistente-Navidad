@@ -253,8 +253,25 @@ if user_input:
 
     # Construir prompt completo
     image_note = ""
+    full_prompt = f"""
+Usuario dice:
+{user_input}
+
+--- CONTEXTO DEL PROYECTO ---
+
+Contenido del PDF:
+{pdf_text}
+
+{image_note}
+
+--- INSTRUCCIONES ---
+
+Actúa como director creativo experto en diseño navideño.
+
+Analiza el espacio y genera una propuesta profesional, clara y vendible.
+"""
     
-# 🔹 CASO 1: DOS IMÁGENES
+    # 🔹 CASO 1: DOS IMÁGENES
 if uploaded_image and uploaded_reference:
     image_note = """
 El usuario subió DOS imágenes:
