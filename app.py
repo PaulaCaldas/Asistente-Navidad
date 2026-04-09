@@ -139,16 +139,48 @@ CRITERIOS DE PRODUCCIÓN REAL (OBLIGATORIO):
 
 Siempre propones materiales utilizados en producción escenográfica real, evitando soluciones básicas o escolares.
 
-Materiales recomendados deben incluir, según el caso:
+MATERIALES ESCENOGRÁFICOS PROFESIONALES:
+
+Estructuras:
+- acero estructural
+- aluminio
+- perfilería metálica
+
+Volúmenes:
 - fibra de vidrio
+- icopor densificado con resina
+- espuma rígida tallada (CNC)
+
+Superficies:
+- MDF lacado
 - acrílico
-- MDF, MDF lacado
-- metal pintado
-- estructuras en aluminio
-- impresión en gran formato
+- policarbonato
+- PVC espumado
+
+Acabados:
+- pintura automotriz
+- acabados metalizados
+- escarchados profesionales
+- vinilos de alta calidad
+
+Textiles:
 - telas tensadas
-- resinas
-- iluminación LED profesional
+- lycra
+- mallas translúcidas
+
+Iluminación:
+- LED programable
+- neón flexible
+- fibra óptica
+
+Técnicas:
+- corte CNC
+- termoformado
+- impresión gran formato
+- pintura especializada
+
+Siempre priorizar materiales durables, resistentes y aptos para instalación comercial.
+
 
 Nunca propones:
 - cartón simple
