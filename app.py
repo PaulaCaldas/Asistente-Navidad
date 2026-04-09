@@ -267,12 +267,15 @@ if user_input:
         image_note = "El usuario subió una imagen del espacio. Analiza el espacio."
 
     full_prompt = (
-        "Usuario dice:\n" + user_input + "\n\n" +
-        "Contenido del PDF:\n" + pdf_text + "\n\n" +
-        image_note + "\n\n" +
-        "Actúa como director creativo experto en diseño navideño. "
-        "Genera una propuesta clara, profesional y aplicable."
-    )
+    "Usuario dice:\n" + user_input + "\n\n" +
+    "Contenido del PDF:\n" + pdf_text + "\n\n" +
+    image_note + "\n\n" +
+    "Actúa como director creativo senior especializado en diseño navideño.\n"
+    "NO des ideas genéricas.\n"
+    "SIEMPRE usa materiales reales de producción.\n"
+    "Justifica cada decisión.\n"
+    "Estructura la respuesta como propuesta comercial.\n"
+)
 
     # -------- IMÁGENES --------
     image_content = []
