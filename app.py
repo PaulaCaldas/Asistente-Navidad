@@ -280,13 +280,20 @@ for msg in st.session_state.messages[1:]:
         st.chat_message("user").write(msg["content"])
 
     elif msg["role"] == "assistant":
+
         st.chat_message("assistant").write(msg["content"])
 
-        if "image" in msg:
-            import base64
-            img_bytes = base64.b64decode(msg["image"])
-            st.image(img_bytes, use_container_width=True)
+        # 🔥 mostrar imagen si existe
+        if "image" in msg and msg["image"]:
 
+            import base64
+
+            try:
+                img_bytes = base64.b64decode(msg["image"])
+                st.image(img_bytes, use_container_width=True)
+            except:
+                st.warning("⚠️ Error cargando imagen guardada")
+                
 # ✍️ INPUT USUARIO
 user_input = st.chat_input("💬 Hola… ¿cómo vamos a comenzar esta nueva Navidad?")
 
@@ -533,22 +540,21 @@ render tipo fotografía profesional, iluminación cinematográfica, ultra realis
         # 🔥 VALIDACIÓN CLAVE
         if image and image.data and len(image.data) > 0:
 
-            if hasattr(image.data[0], "b64_json"):
+            import base64
 
-                import base64
-                img_base64 = image.data[0].b64_json
-                img_bytes = base64.b64decode(img_base64)
+            # 🔥 tomar base64 SIEMPRE
+            img_base64 = image.data[0].b64_json
+            img_bytes = base64.b64decode(img_base64)
 
-                # Mostrar imagen
-                st.image(img_bytes, caption="Propuesta generada", use_container_width=True)
+            # Mostrar imagen
+            st.image(img_bytes, caption="Propuesta generada", use_container_width=True)
 
-                # 🔥 GUARDAR EN HISTORIAL
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": reply,
-                    "image": img_base64
-                })
-
+            # 🔥 guardar en historial
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": reply,
+                "image": img_base64
+            })
             else:
                 st.warning("⚠️ No se pudo generar imagen correctamente.")
 
