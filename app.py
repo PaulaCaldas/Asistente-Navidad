@@ -227,7 +227,11 @@ with st.expander("📎 Adjuntar archivos del proyecto"):
 
     # 🖼 IMAGEN
     uploaded_image = st.file_uploader("🖼 Sube una imagen (fachada, vacío, referencia)", type=["png","jpg","jpeg"])
-
+    uploaded_reference = st.file_uploader(
+    "🧩 Sube elemento de referencia (ej: esferas, figuras, luces)",
+    type=["png","jpg","jpeg"],
+    key="reference"
+)
     if uploaded_image:
         image = Image.open(uploaded_image)
         st.image(image, caption="Referencia cargada", use_column_width=True)
@@ -249,15 +253,66 @@ if user_input:
 
     # Construir prompt completo
     image_note = ""
+    
+# 🔹 CASO 1: DOS IMÁGENES
+if uploaded_image and uploaded_reference:
+    image_note = """
+El usuario subió DOS imágenes:
 
-    if uploaded_image:
-        image_note = """
+1. Imagen del espacio
+2. Imagen de elementos decorativos
+
+OBLIGATORIO:
+
+1. Describe el espacio con precisión:
+- tipo (fachada, vacío, interior, escena)
+- cantidad de niveles o altura 
+- elementos arquitectónicos visibles (barandas, columnas, circulación, locales, etc.)
+- proporciones del espacio
+
+2. Analiza cómo se comporta visualmente:
+- puntos focales
+- ejes visuales
+- zonas de mayor impacto
+
+3. Analiza los elementos decorativos de la segunda imagen:
+- tipo de elemento (esferas, luces, figuras, etc.)
+- material aparente
+- escala y proporción
+- estilo (elegante, infantil, moderno, etc.)
+
+4. Propón la integración de estos elementos en el espacio:
+- ubicación exacta
+- alturas específicas
+- densidad y distribución
+- relación con la arquitectura
+
+Además:
+
+5. Justifica cada decisión de diseño:
+- por qué ese concepto
+- por qué esos elementos
+- qué impacto genera en el usuario
+
+6. Usa lenguaje de presentación comercial:
+- debe sonar como pitch
+- convincente y vendible
+
+7. Evita propuestas genéricas:
+- todo debe responder al espacio analizado
+
+Responde como si estuvieras presentando un concepto basado en ambas imágenes.
+"""
+
+# 🔹 CASO 2: SOLO ESPACIO
+elif uploaded_image:
+    image_note = """
 El usuario subió una imagen del espacio.
 
 OBLIGATORIO:
 
 1. Describe el espacio con precisión:
-- tipo (fachada, vacío, interior,, escena)
+- tipo (fachada, vacío, interior, escena)
 - cantidad de niveles o altura 
 - elementos arquitectónicos visibles (barandas, columnas, circulación, locales, etc.)
 - proporciones del espacio
@@ -268,68 +323,46 @@ OBLIGATORIO:
 - zonas de mayor impacto
 
 3. Luego propone la intervención:
-- ubicación exacta de elementos (genera propuestas dinámicas, elementos colgante, formas, guirnaldas etc..)
+- ubicación exacta de elementos
 - alturas específicas
 - densidad y distribución
 
 Además:
 
-4. Justifica cada decisión de diseño:
-- por qué ese concepto
-- por qué esos elementos
-- qué impacto genera en el usuario
+4. Justifica cada decisión de diseño
+5. Usa lenguaje de presentación comercial
+6. Evita propuestas genéricas
 
-5. Usa lenguaje de presentación comercial:
-- debe sonar como pitch
-- convincente y vendible
-
-6. Evita propuestas genéricas:
-- todo debe responder al espacio analizado
-
-Responde como si estuvieras presentando un concepto basado en esa imagen real.
+Responde como diseñador profesional.
 """
-
-    full_prompt = f"""
-Usuario dice:
-{user_input}
-
---- CONTEXTO DEL PROYECTO ---
-
-Contenido del PDF:
-{pdf_text}
-
-{image_note}
-
---- INSTRUCCIONES ---
-
-Actúa como director creativo experto en diseño navideño.
-
-Si hay PDF:
-- analiza el brief
-- define dirección creativa
-
-Si hay imagen:
-- propone intervención clara en el espacio
-
-Responde con propuesta clara, aplicable y profesional.
-"""
-
     st.session_state.messages.append({"role": "user", "content": user_input})
 
  # --- PROCESAR IMAGEN ---
-    image_content = None
+    image_content = []
 
-    if uploaded_image:
-        uploaded_image.seek(0)
-        image_bytes = uploaded_image.read()
-        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+if uploaded_image:
+    uploaded_image.seek(0)
+    image_bytes = uploaded_image.read()
+    image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
-        image_content = {
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/png;base64,{image_base64}"
-            }
+    image_content.append({
+        "type": "image_url",
+        "image_url": {
+            "url": f"data:image/png;base64,{image_base64}"
         }
+    })
+
+if uploaded_reference:
+    uploaded_reference.seek(0)
+    ref_bytes = uploaded_reference.read()
+    ref_base64 = base64.b64encode(ref_bytes).decode("utf-8")
+
+    image_content.append({
+        "type": "image_url",
+        "image_url": {
+            "url": f"data:image/png;base64,{ref_base64}"
+        }
+    })
 
     # --- CONSTRUIR MENSAJE ---
     user_message = {
@@ -342,8 +375,8 @@ Responde con propuesta clara, aplicable y profesional.
         ]
     }
 
-    if image_content:
-        user_message["content"].append(image_content)
+    for img in image_content:
+    user_message["content"].append(img)
 
     # --- LLAMADO ---
     response = client.chat.completions.create(
