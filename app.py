@@ -248,152 +248,87 @@ user_input = st.chat_input("💬 Hola… ¿cómo vamos a comenzar esta nueva Nav
 
 if user_input:
 
-    # Mostrar input
+    # Mostrar mensaje usuario
     st.chat_message("user").write(user_input)
+
+    # Guardar historial
     st.session_state.messages.append({
         "role": "user",
         "content": user_input
     })
-    # Construir prompt completo
+
+    # -------- PROMPT LIMPIO --------
     image_note = ""
 
-    # 🔹 CASO 1: DOS IMÁGENES
     if uploaded_image and uploaded_reference:
-        image_note = """ 
-        El usuario subió DOS imágenes:
+        image_note = "El usuario subió dos imágenes: espacio + elementos. Debes integrarlos."
 
-1. Imagen del espacio
-2. Imagen de elementos decorativos
-
-OBLIGATORIO:
-
-1. Describe el espacio con precisión:
-- tipo (fachada, vacío, interior, escena)
-- cantidad de niveles o altura 
-- elementos arquitectónicos visibles (barandas, columnas, circulación, locales, etc.)
-- proporciones del espacio
-
-2. Analiza cómo se comporta visualmente:
-- puntos focales
-- ejes visuales
-- zonas de mayor impacto
-
-3. Analiza los elementos decorativos de la segunda imagen:
-- tipo de elemento (esferas, luces, figuras, etc.)
-- material aparente
-- escala y proporción
-- estilo (elegante, infantil, moderno, etc.)
-
-4. Propón la integración de estos elementos en el espacio:
-- ubicación exacta
-- alturas específicas
-- densidad y distribución
-- relación con la arquitectura
-
-Además:
-
-5. Justifica cada decisión de diseño:
-- por qué ese concepto
-- por qué esos elementos
-- qué impacto genera en el usuario
-
-6. Usa lenguaje de presentación comercial:
-- debe sonar como pitch
-- convincente y vendible
-
-7. Evita propuestas genéricas:
-- todo debe responder al espacio analizado
-
-Responde como si estuvieras presentando un concepto basado en ambas imágenes.
-"""
-
-    # 🔹 CASO 2: SOLO ESPACIO
     elif uploaded_image:
-        image_note = """
-El usuario subió una imagen del espacio.
+        image_note = "El usuario subió una imagen del espacio. Analiza el espacio."
 
-OBLIGATORIO:
+    full_prompt = (
+        "Usuario dice:\n" + user_input + "\n\n" +
+        "Contenido del PDF:\n" + pdf_text + "\n\n" +
+        image_note + "\n\n" +
+        "Actúa como director creativo experto en diseño navideño. "
+        "Genera una propuesta clara, profesional y aplicable."
+    )
 
-1. Describe el espacio con precisión:
-- tipo (fachada, vacío, interior, escena)
-- cantidad de niveles o altura 
-- elementos arquitectónicos visibles (barandas, columnas, circulación, locales, etc.)
-- proporciones del espacio
+    # -------- IMÁGENES --------
+    image_content = []
 
-2. Analiza cómo se comporta visualmente:
-- puntos focales
-- ejes visuales
-- zonas de mayor impacto
+    if uploaded_image:
+        uploaded_image.seek(0)
+        image_bytes = uploaded_image.read()
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
-3. Luego propone la intervención:
-- ubicación exacta de elementos
-- alturas específicas
-- densidad y distribución
+        image_content.append({
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/png;base64,{image_base64}"
+            }
+        })
 
-Además:
+    if uploaded_reference:
+        uploaded_reference.seek(0)
+        ref_bytes = uploaded_reference.read()
+        ref_base64 = base64.b64encode(ref_bytes).decode("utf-8")
 
-4. Justifica cada decisión de diseño
-5. Usa lenguaje de presentación comercial
-6. Evita propuestas genéricas
+        image_content.append({
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/png;base64,{ref_base64}"
+            }
+        })
 
-Responde como diseñador profesional.
-"""
-full_prompt = f"Usuario dice:\n{user_input}\n\nContenido del PDF:\n{pdf_text}\n\n{image_note}\n\nActúa como director creativo experto en diseño navideño. Genera una propuesta clara, profesional y aplicable."
+    # -------- MENSAJE --------
+    user_message = {
+        "role": "user",
+        "content": [
+            {"type": "text", "text": full_prompt}
+        ]
+    }
 
+    for img in image_content:
+        user_message["content"].append(img)
 
- # --- PROCESAR IMAGEN ---
-image_content = []
+    # -------- OPENAI --------
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            user_message
+        ]
+    )
 
-if uploaded_image:
-    uploaded_image.seek(0)
-    image_bytes = uploaded_image.read()
-    image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+    reply = response.choices[0].message.content
 
-    image_content.append({
-        "type": "image_url",
-        "image_url": {
-            "url": f"data:image/png;base64,{image_base64}"
-        }
+    st.chat_message("assistant").write(reply)
+
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": reply
     })
-
-if uploaded_reference:
-    uploaded_reference.seek(0)
-    ref_bytes = uploaded_reference.read()
-    ref_base64 = base64.b64encode(ref_bytes).decode("utf-8")
-
-    image_content.append({
-        "type": "image_url",
-        "image_url": {
-            "url": f"data:image/png;base64,{ref_base64}"
-        }
-    })
-
-# --- MENSAJE ---
-user_message = {
-    "role": "user",
-    "content": [
-        {
-            "type": "text",
-            "text": full_prompt
-        }
-    ]
-}
-
-# 👇 SOLO agrega imágenes
-for img in image_content:
-    user_message["content"].append(img)
-
-# 👇 ESTO VA FUERA DEL FOR
-response = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-        {"role": "system", "content": system_prompt},
-        user_message
-    ]
-)
-
-reply = response.choices[0].message.content
-st.chat_message("assistant").write(reply)
 
 # --- DETECTAR TABLA ---
 if "reply" in locals() and "|" in reply:
