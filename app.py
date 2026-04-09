@@ -365,7 +365,7 @@ if uploaded_reference:
     })
 
     # --- CONSTRUIR MENSAJE ---
-       user_message = {
+    user_message = {
         "role": "user",
         "content": [
             {
@@ -374,7 +374,6 @@ if uploaded_reference:
             }
         ]
     }
-
 
     for img in image_content:
         user_message["content"].append(img)
