@@ -275,10 +275,17 @@ with st.expander("📎 Adjuntar archivos del proyecto"):
 
 # 💬 MOSTRAR CHAT
 for msg in st.session_state.messages[1:]:
+
     if msg["role"] == "user":
         st.chat_message("user").write(msg["content"])
+
     elif msg["role"] == "assistant":
         st.chat_message("assistant").write(msg["content"])
+
+        if "image" in msg:
+            import base64
+            img_bytes = base64.b64decode(msg["image"])
+            st.image(img_bytes, use_container_width=True)
 
 # ✍️ INPUT USUARIO
 user_input = st.chat_input("💬 Hola… ¿cómo vamos a comenzar esta nueva Navidad?")
@@ -464,7 +471,6 @@ if user_input:
             reply = "No se pudo generar respuesta"
             
         st.chat_message("assistant").write(reply)
-        st.session_state.messages.append({"role": "assistant", "content": reply})
         
         if HISTORY_FILE:
             with open(HISTORY_FILE, "w") as f:
@@ -527,19 +533,24 @@ render tipo fotografía profesional, iluminación cinematográfica, ultra realis
         # 🔥 VALIDACIÓN CLAVE
         if image and image.data and len(image.data) > 0:
 
-            if hasattr(image.data[0], "url") and image.data[0].url:
-                st.image(image.data[0].url, caption="Propuesta generada", use_container_width=True)
+            if hasattr(image.data[0], "b64_json"):
 
-            elif hasattr(image.data[0], "b64_json"):
                 import base64
-                img_bytes = base64.b64decode(image.data[0].b64_json)
+                img_base64 = image.data[0].b64_json
+                img_bytes = base64.b64decode(img_base64)
+
+                # Mostrar imagen
                 st.image(img_bytes, caption="Propuesta generada", use_container_width=True)
 
-            else:
-                st.warning("⚠️ La imagen no se pudo procesar correctamente.")
+                # 🔥 GUARDAR EN HISTORIAL
+                st.session_state.messages.append({
+                    "role": "assistant",
+                    "content": reply,
+                    "image": img_base64
+                })
 
-        else:
-            st.warning("⚠️ No se generó imagen.")
+            else:
+                st.warning("⚠️ No se pudo generar imagen correctamente.")
 
     except Exception as e:
         st.error(f"Error generando imagen: {e}")
