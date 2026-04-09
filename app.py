@@ -367,7 +367,7 @@ elif uploaded_image:
         })
 
     # -------- MENSAJE --------
-    user_message = {
+user_message = {
     "role": "user",
     "content": [
         {
@@ -377,8 +377,9 @@ elif uploaded_image:
     ]
 }
 
-    for img in image_content:
-        user_message["content"].append(img)
+# 5. agregar imágenes
+for img in image_content:
+    user_message["content"].append(img)
         
 import time
 
