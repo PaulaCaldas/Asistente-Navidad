@@ -65,6 +65,12 @@ selected_chat = st.selectbox(
     "💼 Proyecto",
     ["nuevo"] + chat_files
 )
+# Definir archivo de historial según selección
+if selected_chat == "nuevo":
+    chat_name = st.text_input("Nombre del proyecto")
+    HISTORY_FILE = f"{HISTORY_FOLDER}/{chat_name}.json" if chat_name else None
+else:
+    HISTORY_FILE = f"{HISTORY_FOLDER}/{selected_chat}.json"
 
 # 🧠 SYSTEM (TU ADN)
 system_prompt = """
@@ -228,14 +234,14 @@ Desarrollar propuestas creativas adaptadas a cada cliente, manteniendo criterio 
 """
 # 🧠 MEMORIA
 if "messages" not in st.session_state:
-    try:
+
+    if HISTORY_FILE and os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE, "r") as f:
             st.session_state.messages = json.load(f)
-    except:
+    else:
         st.session_state.messages = [
             {"role": "system", "content": system_prompt}
         ]
-
 # 📎 EXPANDER PARA ARCHIVOS
 with st.expander("📎 Adjuntar archivos del proyecto"):
 
@@ -452,8 +458,10 @@ if user_input:
         st.chat_message("assistant").write(reply)
         st.session_state.messages.append({"role": "assistant", "content": reply})
         
-        with open(HISTORY_FILE, "w") as f:
-            json.dump(st.session_state.messages, f)
+        if HISTORY_FILE:
+            with open(HISTORY_FILE, "w") as f:
+                json.dump(st.session_state.messages, f)
+                
     except Exception as e:
         st.error(f"Error: {e}")
 
