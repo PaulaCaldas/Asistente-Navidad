@@ -378,22 +378,22 @@ elif uploaded_image:
         user_message["content"].append(img)
 
     # -------- OPENAI --------
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            user_message
-        ]
-    )
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                user_message
+            ]
+        )
 
     reply = response.choices[0].message.content
 
     st.chat_message("assistant").write(reply)
+    st.session_state.messages.append({"role": "assistant", "content": reply})
 
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": reply
-    })
+except Exception as e:
+    st.error("⚠️ El sistema está recibiendo muchas solicitudes. Intenta de nuevo en unos segundos.")
 
 # --- DETECTAR TABLA ---
 if "reply" in locals() and "|" in reply:
