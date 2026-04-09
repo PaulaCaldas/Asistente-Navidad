@@ -555,8 +555,9 @@ render tipo fotografía profesional, iluminación cinematográfica, ultra realis
                 "content": reply,
                 "image": img_base64
             })
-            else:
-                st.warning("⚠️ No se pudo generar imagen correctamente.")
+            
+        else:
+            st.warning("⚠️ No se generó imagen")
 
     except Exception as e:
         st.error(f"Error generando imagen: {e}")
