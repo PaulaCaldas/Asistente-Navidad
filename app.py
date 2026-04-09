@@ -328,8 +328,21 @@ elif uploaded_image:
 
         "Responde como diseñador profesional."
     )
+else:
+    image_note = (
+        "El usuario no subió imágenes.\n\n"
 
-    full_prompt = (
+        "OBLIGATORIO:\n\n"
+
+        "1. Pregunta que proyecto quiere revisar:\n"
+        "- narrativa\n"
+        "- estilo (tradicional, elegante, mágico, etc.)\n"
+        "- intención del espacio\n\n"
+
+        "Evita propuestas genéricas. Responde como diseñador experto."
+    )
+
+full_prompt = (
     f"Usuario dice:\n{str(user_input)}\n\n"
     f"Contenido del PDF:\n{str(pdf_text)}\n\n"
     f"{image_note}\n\n"
