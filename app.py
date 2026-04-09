@@ -392,8 +392,8 @@ elif uploaded_image:
     st.chat_message("assistant").write(reply)
     st.session_state.messages.append({"role": "assistant", "content": reply})
 
-except Exception as e:
-    st.error("⚠️ El sistema está recibiendo muchas solicitudes. Intenta de nuevo en unos segundos.")
+    except Exception as e:
+        st.error("⚠️ El sistema está recibiendo muchas solicitudes. Intenta de nuevo en unos segundos.")
 
 # --- DETECTAR TABLA ---
 if "reply" in locals() and "|" in reply:
