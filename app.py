@@ -364,6 +364,7 @@ if uploaded_reference:
         }
     })
 
+# --- MENSAJE ---
 user_message = {
     "role": "user",
     "content": [
@@ -374,10 +375,11 @@ user_message = {
     ]
 }
 
+# 👇 SOLO agrega imágenes
 for img in image_content:
     user_message["content"].append(img)
 
-
+# 👇 ESTO VA FUERA DEL FOR
 response = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
