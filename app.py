@@ -375,8 +375,7 @@ if uploaded_reference:
         ]
     }
 
-    for img in image_content:
-        user_message["content"].append(img)
+    
 
     # --- LLAMADO ---
     response = client.chat.completions.create(
