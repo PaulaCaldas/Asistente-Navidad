@@ -489,12 +489,11 @@ render hiperrealista tipo Keyshot, iluminación cinematográfica.
             # Enviar a replicate correctamente
             with open(temp_path, "rb") as f:
                 output = replicate.run(
-                    "stability-ai/sdxl-img2img",
+                    "lucataco/sdxl-controlnet",
                     input={
                         "image": f,
                         "prompt": image_prompt,
-                        "strength": 0.7,
-                        "guidance_scale": 7.5,
+                        "strength": 0.6,
                         "num_inference_steps": 30
                     }
                 )
