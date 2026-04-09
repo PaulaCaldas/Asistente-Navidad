@@ -1,6 +1,6 @@
 streamlit
 openai
-PyPDF2
-pillow
 replicate==0.25.2
 pydantic==1.10.13
+Pillow
+PyPDF2
