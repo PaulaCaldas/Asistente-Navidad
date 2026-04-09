@@ -363,9 +363,9 @@ if uploaded_reference:
             "url": f"data:image/png;base64,{ref_base64}"
         }
     })
-st.write(full_prompt)
+
     # --- CONSTRUIR MENSAJE ---
-    user_message = {
+       user_message = {
         "role": "user",
         "content": [
             {
@@ -374,6 +374,7 @@ st.write(full_prompt)
             }
         ]
     }
+
 
     for img in image_content:
         user_message["content"].append(img)
