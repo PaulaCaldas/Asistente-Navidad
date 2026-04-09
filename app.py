@@ -356,7 +356,7 @@ full_prompt = (
     
 image_content = []
 
-    if uploaded_image:
+if uploaded_image:
         uploaded_image.seek(0)
         image_bytes = uploaded_image.read()
         image_base64 = base64.b64encode(image_bytes).decode("utf-8")
