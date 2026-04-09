@@ -7,7 +7,7 @@ import io
 import pandas as pd
 import json
 
-HISTORY_FILE = "chat_history.json"
+HISTORY_FOLDER = "histories"
 
 import os
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -50,6 +50,21 @@ h1 {
 # 🎄 TÍTULO PERSONALIZADO
 st.title("✨ Tu mano derecha para crear Navidad")
 st.write("Tu asistente creativo para conceptos, storytelling y diseño navideño en centros comerciales.")
+
+import os
+
+# Crear carpeta si no existe
+if not os.path.exists(HISTORY_FOLDER):
+    os.makedirs(HISTORY_FOLDER)
+
+# Lista de chats existentes
+chat_files = [f.replace(".json","") for f in os.listdir(HISTORY_FOLDER)]
+
+# Selector de proyecto
+selected_chat = st.selectbox(
+    "💼 Proyecto",
+    ["nuevo"] + chat_files
+)
 
 # 🧠 SYSTEM (TU ADN)
 system_prompt = """
