@@ -5,7 +5,6 @@ from PIL import Image
 import base64
 import io
 import pandas as pd
-import replicate
 
 import os
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -453,52 +452,36 @@ if user_input:
         except:
             pass
 
-    # -------- IMAGEN IA (INTERVENCIÓN REAL) --------
+
+    # -------- GENERAR IMAGEN CON OPENAI --------
     try:
-        if uploaded_image:
+        image_prompt = f"""
+Render hiperrealista de un centro comercial intervenido con decoración navideña.
 
-            uploaded_image.seek(0)
-            image_bytes = uploaded_image.read()
-
-            image_prompt = f"""
-Intervenir esta imagen de un centro comercial con decoración navideña profesional.
-
-PROPUESTA:
+Basado en este concepto:
 {reply}
 
-INSTRUCCIONES:
-- Mantener arquitectura original EXACTA
-- No deformar estructura
-- Integrar decoración en barandas, columnas y bordes
-- Iluminación realista (icicle, cortinas de luz)
-- Materiales premium (acrílico, metal, fibra de vidrio)
-- Escala realista
-- Nada flotando
+Incluir:
+- iluminación cálida elegante (2700K–3000K)
+- icicle en barandas con caída natural (40cm a 1m)
+- cortinas de luz suspendidas en vacíos
+- materiales premium (metal, vidrio, acrílico)
+- integración arquitectónica realista
+- proporciones correctas
 
 Estilo:
-render hiperrealista tipo Keyshot, iluminación cinematográfica.
+render tipo fotografía profesional, iluminación cinematográfica, ultra realista.
 """
 
-            import tempfile
+        image = client.images.generate(
+            model="gpt-image-1",
+            prompt=image_prompt,
+            size="1024x1024"
+        )
 
-            # Guardar imagen temporal
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-                temp_file.write(image_bytes)
-                temp_path = temp_file.name
+        image_url = image.data[0].url
 
-            # Enviar a replicate correctamente
-            with open(temp_path, "rb") as f:
-                output = replicate.run(
-                    "stability-ai/stable-diffusion:db21e45f...",
-                    input={
-                        "image": f,
-                        "prompt": image_prompt,
-                        "strength": 0.6,
-                        "num_inference_steps": 30
-                    }
-                )
-
-            st.image(output[0], caption="Propuesta intervenida", use_container_width=True)
+        st.image(image_url, caption="Propuesta generada", use_container_width=True)
 
     except Exception as e:
-        st.write(e)
+        st.error(f"Error generando imagen: {e}")
