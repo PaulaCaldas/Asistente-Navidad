@@ -278,21 +278,7 @@ h1 {
 """, unsafe_allow_html=True)
 
 # 🎄 TÍTULO PERSONALIZADO
-st.markdown("""
-<div class="hero">
-
-    <div class="logo">NIVARA</div>
-
-    <div class="subtitle">
-        Dirección creativa para experiencias navideñas en retail
-    </div>
-
-    <div class="tagline">
-        Listo para diseñar experiencias navideñas ✨
-    </div>
-
-</div>
-""", unsafe_allow_html=True)
+st.markdown('<h1 class="logo">NIVARA</h1>', unsafe_allow_html=True)
 st.markdown(
     '<p class="subtitle">Dirección creativa para experiencias navideñas en retail</p>',
     unsafe_allow_html=True
