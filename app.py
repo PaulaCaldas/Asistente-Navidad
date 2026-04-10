@@ -240,7 +240,8 @@ st.markdown(
     '<p class="subtitle">Dirección creativa para experiencias navideñas en retail</p>',
     unsafe_allow_html=True
 )
-
+st.caption("Listo para diseñar experiencias navideñas 🎄")
+st.write("DEBUG:", len(st.session_state.messages))
 import os
 
 # Crear carpeta si no existe
@@ -443,7 +444,18 @@ OBJETIVO:
 Desarrollar propuestas creativas adaptadas a cada cliente, manteniendo criterio profesional, coherencia conceptual y calidad visual.
 """
 # 🧠 MEMORIA
-if "messages" not in st.session_state or not st.session_state.messages:
+if "messages" not in st.session_state:
+
+    st.session_state.messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "assistant", "content": "Hola, soy NIVARA ✨ ¿Qué proyecto quieres diseñar hoy?"}
+    ]
+
+elif not st.session_state.messages:
+
+    st.session_state.messages.append(
+        {"role": "assistant", "content": "Hola, soy NIVARA ✨ ¿Qué proyecto quieres diseñar hoy?"}
+    )
 
     if HISTORY_FILE and os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE, "r") as f:
