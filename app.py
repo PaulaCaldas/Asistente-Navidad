@@ -16,7 +16,26 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 st.markdown("""
 <style>
 .stApp {
-    background-color: #A48374;
+    background: linear-gradient(
+        120deg,
+        #0b0b0b 0%,
+        #1a1410 40%,
+        #2a1f17 70%,
+        #0a0a0a 100%
+    );
+}
+.stApp::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at 70% 30%,
+        rgba(255, 200, 150, 0.06),
+        transparent 40%
+    );
+
+    pointer-events: none;
 }
 
 /* Uploaders */
@@ -44,12 +63,183 @@ h1 {
     color: gray;
     font-style: italic;
 }
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 500;
+    letter-spacing: 4px;
+
+    color: #f5f5f5;
+
+    text-align: center;
+    margin-bottom: 5px;
+
+    text-shadow: 0 0 20px rgba(255, 210, 160, 0.15);
+
+    /* 👇 AGREGA ESTO */
+    opacity: 0;
+    animation: fadeUp 1s ease forwards;
+}
+.subtitle {
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 30px;
+
+    opacity: 0;
+    animation: fadeUp 1.4s ease forwards;
+}
+/* 👇 animación */
+[data-testid="stChatMessage"] {
+    animation: fadeUp 0.5s ease;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* CONTENEDOR GENERAL DEL CHAT */
+[data-testid="stChatMessage"] {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* BURBUJA GENERAL */
+[data-testid="stChatMessage"] > div {
+    padding: 14px 18px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* USUARIO (derecha) */
+[data-testid="stChatMessage"][data-testid*="user"] > div {
+    background: #d6c2a8;
+    color: #1a1a1a;
+    margin-left: auto;
+    max-width: 70%;
+}
+
+/* ASISTENTE (izquierda) */
+[data-testid="stChatMessage"][data-testid*="assistant"] > div {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #f1f1f1;
+    margin-right: auto;
+    max-width: 70%;
+}
+
+/* INPUT BOX */
+[data-testid="stChatInput"] {
+    border-radius: 12px;
+}
+
+/* TEXTO INPUT */
+[data-testid="stChatInput"] textarea {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    border-radius: 10px;
+}
+/* SIDEBAR FONDO */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(
+        180deg,
+        #0f0f0f 0%,
+        #1a1410 100%
+    );
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+/* TEXTO SIDEBAR */
+section[data-testid="stSidebar"] * {
+    color: #eaeaea;
+    font-family: 'Inter', sans-serif;
+}
+
+/* SELECTBOX */
+section[data-testid="stSidebar"] .stSelectbox {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+}
+
+/* INPUT */
+section[data-testid="stSidebar"] input {
+    background: rgba(255,255,255,0.05);
+    color: white;
+    border-radius: 8px;
+}
+/* ARREGLAR CAPAS */
+* {
+    position: relative;
+    z-index: 1;
+}
+
+.stApp {
+    position: relative;
+    z-index: 0;
+}
+/* UPLOADER COMPACTO */
+section[data-testid="stFileUploader"] {
+    background: transparent;
+    border: none;
+}
+
+/* BOTÓN */
+section[data-testid="stFileUploader"] button {
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    height: 40px;
+}
+
+/* INPUT ALINEADO */
+[data-testid="stChatInput"] {
+    margin-top: -10px;
+}
+/* BOTONES PROYECTOS */
+section[data-testid="stSidebar"] button {
+    width: 100%;
+    text-align: left;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    margin-bottom: 6px;
+    padding: 10px;
+
+    transition: all 0.3s ease;
+}
+
+/* HOVER */
+section[data-testid="stSidebar"] button:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateX(4px);
+}
+
+/* BOTÓN NUEVO */
+section[data-testid="stSidebar"] button:first-child {
+    background: #d6c2a8;
+    color: #1a1a1a;
+    font-weight: 500;
+}
 </style>
 """, unsafe_allow_html=True)
 
 # 🎄 TÍTULO PERSONALIZADO
-st.title("✨ Tu mano derecha para crear Navidad")
-st.write("Tu asistente creativo para conceptos, storytelling y diseño navideño en centros comerciales.")
+st.markdown('<h1 class="logo">NIVARA</h1>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="subtitle">Dirección creativa para experiencias navideñas en retail</p>',
+    unsafe_allow_html=True
+)
 
 import os
 
@@ -60,25 +250,37 @@ if not os.path.exists(HISTORY_FOLDER):
 # Lista de chats existentes
 chat_files = [f.replace(".json","") for f in os.listdir(HISTORY_FOLDER)]
 
-# Selector de proyecto
-selected_chat = st.selectbox(
-    "💼 Proyecto",
-    ["nuevo"] + chat_files
-)
-# Detectar cambio de proyecto
+# ---------- SIDEBAR CORREGIDO ----------
 if "current_chat" not in st.session_state:
-    st.session_state.current_chat = selected_chat
+    st.session_state.current_chat = "nuevo"
 
-if st.session_state.current_chat != selected_chat:
-    st.session_state.current_chat = selected_chat
-    st.session_state.messages = []
-    
-# Definir archivo de historial según selección
-if selected_chat == "nuevo":
-    chat_name = st.text_input("Nombre del proyecto")
-    HISTORY_FILE = f"{HISTORY_FOLDER}/{chat_name}.json" if chat_name else None
+with st.sidebar:
+
+    st.markdown('<h2 class="logo">NIVARA</h2>', unsafe_allow_html=True)
+    st.markdown("### Proyectos")
+
+    # BOTÓN NUEVO
+    if st.button("＋ Nuevo proyecto"):
+        st.session_state.current_chat = "nuevo"
+        st.session_state.messages = []
+
+    # LISTA DE PROYECTOS
+    for chat in chat_files:
+        if st.button(chat, key=f"chat_{chat}"):
+            st.session_state.current_chat = chat
+            st.session_state.messages = []
+
+    # NOMBRE DEL PROYECTO
+    if st.session_state.current_chat == "nuevo":
+        chat_name = st.text_input("Nombre del proyecto")
+    else:
+        chat_name = st.session_state.current_chat
+
+# ---------- HISTORIAL ----------
+if chat_name:
+    HISTORY_FILE = f"{HISTORY_FOLDER}/{chat_name}.json"
 else:
-    HISTORY_FILE = f"{HISTORY_FOLDER}/{selected_chat}.json"
+    HISTORY_FILE = None
 
 # 🧠 SYSTEM (TU ADN)
 system_prompt = """
@@ -250,25 +452,7 @@ if "messages" not in st.session_state or not st.session_state.messages:
         st.session_state.messages = [
             {"role": "system", "content": system_prompt}
         ]
-# 📎 EXPANDER PARA ARCHIVOS
-with st.expander("📎 Adjuntar archivos del proyecto"):
 
-    # 📄 PDF
-    uploaded_pdf = st.file_uploader("📄 Sube tu brief en PDF", type="pdf")
-
-    pdf_text = ""
-    if uploaded_pdf:
-        reader = PyPDF2.PdfReader(uploaded_pdf)
-        for page in reader.pages:
-            pdf_text += page.extract_text()
-
-    # 🖼 IMAGEN
-    uploaded_image = st.file_uploader("🖼 Sube una imagen (fachada, vacío, referencia)", type=["png","jpg","jpeg"])
-    uploaded_reference = st.file_uploader(
-    "🧩 Sube elemento de referencia (ej: esferas, figuras, luces)",
-    type=["png","jpg","jpeg"],
-    key="reference"
-)
     if uploaded_image:
         image = Image.open(uploaded_image)
         st.image(image, caption="Referencia cargada", use_column_width=True)
@@ -293,9 +477,33 @@ for msg in st.session_state.messages[1:]:
                 st.image(img_bytes, use_container_width=True)
             except:
                 st.warning("⚠️ Error cargando imagen guardada")
-                
+# 📄 PDF
+uploaded_pdf = st.file_uploader("📄 Sube tu brief en PDF", type="pdf")
+
+pdf_text = ""
+if uploaded_pdf:
+    reader = PyPDF2.PdfReader(uploaded_pdf)
+    for page in reader.pages:
+        pdf_text += page.extract_text()
+
+# 🖼 IMÁGENES (MULTIPLE)
+uploaded_files = st.file_uploader(
+    "",
+    type=["png","jpg","jpeg"],
+    accept_multiple_files=True,
+    label_visibility="collapsed"
+)
+
+# 👀 PREVIEW
+if uploaded_files:
+    for file in uploaded_files:
+        image = Image.open(file)
+        st.image(image, width=120)
+        
+col1, col2 = st.columns([1, 8])
+
+user_input = st.chat_input("Escribe aquí tu idea…")  
 # ✍️ INPUT USUARIO
-user_input = st.chat_input("💬 Hola… ¿cómo vamos a comenzar esta nueva Navidad?")
 
 if user_input:
 
@@ -312,7 +520,7 @@ if user_input:
     image_note = ""
 
     # 🔹 CASO 1: DOS IMÁGENES
-    if uploaded_image and uploaded_reference:
+    if uploaded_files and len(uploaded_files) > 1:
         image_note = (
             "El usuario subió dos imágenes:\n"
             "1. Imagen del espacio\n"
@@ -351,7 +559,7 @@ if user_input:
         )
 
     # 🔹 CASO 2: SOLO ESPACIO
-    elif uploaded_image:
+    elif uploaded_files:
         image_note = (
             "El usuario subió una imagen del espacio.\n\n"
 
@@ -409,29 +617,18 @@ if user_input:
     # -------- IMÁGENES --------
     image_content = []
 
-    if uploaded_image:
-        uploaded_image.seek(0)
-        image_bytes = uploaded_image.read()
-        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+    if uploaded_files:
+        for file in uploaded_files:
+            file.seek(0)
+            image_bytes = file.read()
+            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
-        image_content.append({
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/png;base64,{image_base64}"
-            }
-        })
-
-    if uploaded_reference:
-        uploaded_reference.seek(0)
-        ref_bytes = uploaded_reference.read()
-        ref_base64 = base64.b64encode(ref_bytes).decode("utf-8")
-
-        image_content.append({
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/png;base64,{ref_base64}"
-            }
-        })
+            image_content.append({
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:image/png;base64,{image_base64}"
+                }
+            })
 
     # -------- MENSAJE --------
     user_message = {
@@ -562,8 +759,5 @@ render tipo fotografía profesional, iluminación cinematográfica, ultra realis
         else:
             st.warning("⚠️ No se generó imagen")
 
-except Exception as e:
-    st.error(f"Error generando imagen: {e}")
-
-    except:
-        pass
+    except Exception as e:
+        st.error(f"Error generando imagen: {e}")
