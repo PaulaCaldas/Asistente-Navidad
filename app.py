@@ -179,6 +179,58 @@ section[data-testid="stSidebar"] input {
     color: white;
     border-radius: 8px;
 }
+/* ARREGLAR CAPAS */
+* {
+    position: relative;
+    z-index: 1;
+}
+
+.stApp {
+    position: relative;
+    z-index: 0;
+}
+/* UPLOADER COMPACTO */
+section[data-testid="stFileUploader"] {
+    background: transparent;
+    border: none;
+}
+
+/* BOTÓN */
+section[data-testid="stFileUploader"] button {
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    height: 40px;
+}
+
+/* INPUT ALINEADO */
+[data-testid="stChatInput"] {
+    margin-top: -10px;
+}
+/* BOTONES PROYECTOS */
+section[data-testid="stSidebar"] button {
+    width: 100%;
+    text-align: left;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    margin-bottom: 6px;
+    padding: 10px;
+
+    transition: all 0.3s ease;
+}
+
+/* HOVER */
+section[data-testid="stSidebar"] button:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateX(4px);
+}
+
+/* BOTÓN NUEVO */
+section[data-testid="stSidebar"] button:first-child {
+    background: #d6c2a8;
+    color: #1a1a1a;
+    font-weight: 500;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -204,10 +256,16 @@ with st.sidebar:
     st.markdown('<h2 class="logo">NIVARA</h2>', unsafe_allow_html=True)
     st.markdown("### Proyectos")
 
-    selected_chat = st.selectbox(
-        "",
-        ["nuevo"] + chat_files
-    )
+    st.markdown("### Proyectos")
+
+# BOTÓN NUEVO
+if st.button("＋ Nuevo proyecto"):
+    st.session_state.current_chat = "nuevo"
+
+# LISTA PROYECTOS
+for chat in chat_files:
+    if st.button(chat, key=chat):
+        st.session_state.current_chat = chat
 
     if selected_chat == "Nuevo":
         chat_name = st.text_input("Nombre del proyecto")
@@ -398,8 +456,6 @@ if "messages" not in st.session_state or not st.session_state.messages:
         st.session_state.messages = [
             {"role": "system", "content": system_prompt}
         ]
-# 📎 EXPANDER PARA ARCHIVOS
-with st.expander("📎 Adjuntar archivos del proyecto"):
 
     # 📄 PDF
     uploaded_pdf = st.file_uploader("📄 Sube tu brief en PDF", type="pdf")
@@ -442,8 +498,18 @@ for msg in st.session_state.messages[1:]:
             except:
                 st.warning("⚠️ Error cargando imagen guardada")
                 
+col1, col2 = st.columns([1, 8])
+
+with col1:
+    uploaded_image = st.file_uploader(
+        "",
+        type=["png","jpg","jpeg","pdf"],
+        label_visibility="collapsed"
+    )
+
+with col2:
+    user_input = st.chat_input("Escribe aquí tu idea…")                
 # ✍️ INPUT USUARIO
-user_input = st.chat_input("💬 Hola… ¿cómo vamos a comenzar esta nueva Navidad?")
 
 if user_input:
 
