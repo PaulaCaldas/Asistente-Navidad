@@ -250,41 +250,37 @@ if not os.path.exists(HISTORY_FOLDER):
 # Lista de chats existentes
 chat_files = [f.replace(".json","") for f in os.listdir(HISTORY_FOLDER)]
 
-# Selector de proyecto
+# ---------- SIDEBAR CORREGIDO ----------
+if "current_chat" not in st.session_state:
+    st.session_state.current_chat = "nuevo"
+
 with st.sidebar:
 
     st.markdown('<h2 class="logo">NIVARA</h2>', unsafe_allow_html=True)
     st.markdown("### Proyectos")
 
-    st.markdown("### Proyectos")
+    # BOTÓN NUEVO
+    if st.button("＋ Nuevo proyecto"):
+        st.session_state.current_chat = "nuevo"
+        st.session_state.messages = []
 
-# BOTÓN NUEVO
-if st.button("＋ Nuevo proyecto"):
-    st.session_state.current_chat = "nuevo"
+    # LISTA DE PROYECTOS
+    for chat in chat_files:
+        if st.button(chat, key=f"chat_{chat}"):
+            st.session_state.current_chat = chat
+            st.session_state.messages = []
 
-# LISTA PROYECTOS
-for chat in chat_files:
-    if st.button(chat, key=chat):
-        st.session_state.current_chat = chat
-
-    if selected_chat == "Nuevo":
+    # NOMBRE DEL PROYECTO
+    if st.session_state.current_chat == "nuevo":
         chat_name = st.text_input("Nombre del proyecto")
     else:
-        chat_name = selected_chat
-# Detectar cambio de proyecto
-if "current_chat" not in st.session_state:
-    st.session_state.current_chat = selected_chat
+        chat_name = st.session_state.current_chat
 
-if st.session_state.current_chat != selected_chat:
-    st.session_state.current_chat = selected_chat
-    st.session_state.messages = []
-    
-# Definir archivo de historial según selección
-if selected_chat == "nuevo":
-    chat_name = st.text_input("Nombre del proyecto")
-    HISTORY_FILE = f"{HISTORY_FOLDER}/{chat_name}.json" if chat_name else None
+# ---------- HISTORIAL ----------
+if chat_name:
+    HISTORY_FILE = f"{HISTORY_FOLDER}/{chat_name}.json"
 else:
-    HISTORY_FILE = f"{HISTORY_FOLDER}/{selected_chat}.json"
+    HISTORY_FILE = None
 
 # 🧠 SYSTEM (TU ADN)
 system_prompt = """
