@@ -241,7 +241,39 @@ h1 {
     color: #f5f5f5;
     letter-spacing: 2px;
 }
+/* 💬 CONTENEDOR CHAT */
+[data-testid="stChatMessage"] {
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
+/* BURBUJA GENERAL */
+[data-testid="stChatMessage"] > div {
+    padding: 14px 18px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* 👤 USUARIO */
+[data-testid="stChatMessage"][data-testid*="user"] > div {
+    background: #d6c2a8;
+    color: #1a1a1a;
+    margin-left: auto;
+    max-width: 70%;
+}
+
+/* 🤖 ASISTENTE */
+[data-testid="stChatMessage"][data-testid*="assistant"] > div {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #f1f1f1;
+    margin-right: auto;
+    max-width: 70%;
+}
 </style>
 """, unsafe_allow_html=True)
 
