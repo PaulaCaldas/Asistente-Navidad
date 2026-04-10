@@ -91,6 +91,11 @@ h1 {
     opacity: 0;
     animation: fadeUp 1.4s ease forwards;
 }
+/* 👇 animación */
+[data-testid="stChatMessage"] {
+    animation: fadeUp 0.5s ease;
+}
+
 @keyframes fadeUp {
     from {
         opacity: 0;
@@ -100,6 +105,51 @@ h1 {
         opacity: 1;
         transform: translateY(0);
     }
+}
+/* CONTENEDOR GENERAL DEL CHAT */
+[data-testid="stChatMessage"] {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* BURBUJA GENERAL */
+[data-testid="stChatMessage"] > div {
+    padding: 14px 18px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* USUARIO (derecha) */
+[data-testid="stChatMessage"][data-testid*="user"] > div {
+    background: #d6c2a8;
+    color: #1a1a1a;
+    margin-left: auto;
+    max-width: 70%;
+}
+
+/* ASISTENTE (izquierda) */
+[data-testid="stChatMessage"][data-testid*="assistant"] > div {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #f1f1f1;
+    margin-right: auto;
+    max-width: 70%;
+}
+
+/* INPUT BOX */
+[data-testid="stChatInput"] {
+    border-radius: 12px;
+}
+
+/* TEXTO INPUT */
+[data-testid="stChatInput"] textarea {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    border-radius: 10px;
 }
 </style>
 """, unsafe_allow_html=True)
