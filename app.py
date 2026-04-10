@@ -16,7 +16,26 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 st.markdown("""
 <style>
 .stApp {
-    background-color: #A48374;
+    background: linear-gradient(
+        120deg,
+        #0b0b0b 0%,
+        #1a1410 40%,
+        #2a1f17 70%,
+        #0a0a0a 100%
+    );
+}
+.stApp::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at 70% 30%,
+        rgba(255, 200, 150, 0.06),
+        transparent 40%
+    );
+
+    pointer-events: none;
 }
 
 /* Uploaders */
