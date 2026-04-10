@@ -151,6 +151,34 @@ h1 {
     color: #fff;
     border-radius: 10px;
 }
+/* SIDEBAR FONDO */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(
+        180deg,
+        #0f0f0f 0%,
+        #1a1410 100%
+    );
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+/* TEXTO SIDEBAR */
+section[data-testid="stSidebar"] * {
+    color: #eaeaea;
+    font-family: 'Inter', sans-serif;
+}
+
+/* SELECTBOX */
+section[data-testid="stSidebar"] .stSelectbox {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+}
+
+/* INPUT */
+section[data-testid="stSidebar"] input {
+    background: rgba(255,255,255,0.05);
+    color: white;
+    border-radius: 8px;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -171,10 +199,20 @@ if not os.path.exists(HISTORY_FOLDER):
 chat_files = [f.replace(".json","") for f in os.listdir(HISTORY_FOLDER)]
 
 # Selector de proyecto
-selected_chat = st.selectbox(
-    "💼 Proyecto",
-    ["nuevo"] + chat_files
-)
+with st.sidebar:
+
+    st.markdown('<h2 class="logo">NIVARA</h2>', unsafe_allow_html=True)
+    st.markdown("### Proyectos")
+
+    selected_chat = st.selectbox(
+        "",
+        ["nuevo"] + chat_files
+    )
+
+    if selected_chat == "Nuevo":
+        chat_name = st.text_input("Nombre del proyecto")
+    else:
+        chat_name = selected_chat
 # Detectar cambio de proyecto
 if "current_chat" not in st.session_state:
     st.session_state.current_chat = selected_chat
