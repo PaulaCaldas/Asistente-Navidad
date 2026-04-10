@@ -204,6 +204,47 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # </style>
 # """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+
+/* 🌑 FONDO ELEGANTE SEGURO */
+.stApp {
+    background: linear-gradient(
+        120deg,
+        #0b0b0b 0%,
+        #14110f 40%,
+        #1c1713 70%,
+        #0a0a0a 100%
+    );
+}
+
+/* ✨ LUZ SUTIL (SIN OVERLAY PROBLEMÁTICO) */
+.main::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+        circle at 70% 30%,
+        rgba(255, 200, 150, 0.05),
+        transparent 50%
+    );
+    pointer-events: none;
+}
+
+/* TEXTO GENERAL */
+body, p, span {
+    color: #f1f1f1;
+}
+
+/* TÍTULO */
+h1 {
+    color: #f5f5f5;
+    letter-spacing: 2px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # 🎄 TÍTULO PERSONALIZADO
 st.markdown('<h1 class="logo">NIVARA</h1>', unsafe_allow_html=True)
 st.markdown(
