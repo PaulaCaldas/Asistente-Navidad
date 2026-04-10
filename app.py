@@ -499,6 +499,7 @@ if uploaded_files:
     for file in uploaded_files:
         image = Image.open(file)
         st.image(image, width=120)
+        
 col1, col2 = st.columns([1, 8])
 
 user_input = st.chat_input("Escribe aquí tu idea…")  
@@ -617,17 +618,17 @@ if user_input:
     image_content = []
 
     if uploaded_files:
-    for file in uploaded_files:
-        file.seek(0)
-        image_bytes = file.read()
-        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+        for file in uploaded_files:
+            file.seek(0)
+            image_bytes = file.read()
+            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
-        image_content.append({
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/png;base64,{image_base64}"
-            }
-        })
+            image_content.append({
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:image/png;base64,{image_base64}"
+                }
+            })
 
     # -------- MENSAJE --------
     user_message = {
