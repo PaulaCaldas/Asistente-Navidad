@@ -453,10 +453,6 @@ if "messages" not in st.session_state or not st.session_state.messages:
             {"role": "system", "content": system_prompt}
         ]
 
-    if uploaded_image:
-        image = Image.open(uploaded_image)
-        st.image(image, caption="Referencia cargada", use_column_width=True)
-
 # 💬 MOSTRAR CHAT
 for msg in st.session_state.messages[1:]:
 
@@ -464,19 +460,15 @@ for msg in st.session_state.messages[1:]:
         st.chat_message("user").write(msg["content"])
 
     elif msg["role"] == "assistant":
-
         st.chat_message("assistant").write(msg["content"])
 
-        # 🔥 mostrar imagen si existe
         if "image" in msg and msg["image"]:
-
-            import base64
-
             try:
                 img_bytes = base64.b64decode(msg["image"])
                 st.image(img_bytes, use_container_width=True)
             except:
                 st.warning("⚠️ Error cargando imagen guardada")
+
 # 📄 PDF
 uploaded_pdf = st.file_uploader("📄 Sube tu brief en PDF", type="pdf")
 
@@ -486,7 +478,7 @@ if uploaded_pdf:
     for page in reader.pages:
         pdf_text += page.extract_text()
 
-# 🖼 IMÁGENES (MULTIPLE)
+# 🖼 IMÁGENES MULTIPLES
 uploaded_files = st.file_uploader(
     "",
     type=["png","jpg","jpeg"],
@@ -499,111 +491,28 @@ if uploaded_files:
     for file in uploaded_files:
         image = Image.open(file)
         st.image(image, width=120)
-        
-col1, col2 = st.columns([1, 8])
 
-user_input = st.chat_input("Escribe aquí tu idea…")  
+# 💬 INPUT
+user_input = st.chat_input("Escribe aquí tu idea…")
+
 # ✍️ INPUT USUARIO
-
 if user_input:
 
-    # Mostrar mensaje usuario
     st.chat_message("user").write(user_input)
 
-    # Guardar historial
     st.session_state.messages.append({
         "role": "user",
         "content": user_input
     })
 
     # -------- PROMPT --------
-    image_note = ""
-
-    # 🔹 CASO 1: DOS IMÁGENES
     if uploaded_files and len(uploaded_files) > 1:
-        image_note = (
-            "El usuario subió dos imágenes:\n"
-            "1. Imagen del espacio\n"
-            "2. Imagen de elementos decorativos\n\n"
-
-            "OBLIGATORIO:\n\n"
-
-            "1. Describe el espacio con precisión:\n"
-            "- tipo (fachada, vacío, interior, escena)\n"
-            "- cantidad de niveles o altura\n"
-            "- elementos arquitectónicos visibles\n"
-            "- proporciones del espacio\n\n"
-
-            "2. Analiza cómo se comporta visualmente:\n"
-            "- puntos focales\n"
-            "- ejes visuales\n"
-            "- zonas de mayor impacto\n\n"
-
-            "3. Analiza los elementos decorativos:\n"
-            "- tipo de elemento\n"
-            "- material aparente\n"
-            "- escala y proporción\n"
-            "- estilo\n\n"
-
-            "4. Propón la integración:\n"
-            "- ubicación exacta\n"
-            "- alturas específicas\n"
-            "- densidad y distribución\n"
-            "- relación con la arquitectura\n\n"
-
-            "5. Justifica decisiones\n"
-            "6. Usa lenguaje comercial\n"
-            "7. Evita propuestas genéricas\n\n"
-
-            "Responde como un pitch profesional."
-        )
-
-    # 🔹 CASO 2: SOLO ESPACIO
+        image_note = "El usuario subió varias imágenes del proyecto."
     elif uploaded_files:
-        image_note = (
-            "El usuario subió una imagen del espacio.\n\n"
-
-            "OBLIGATORIO:\n\n"
-
-            "1. Describe el espacio:\n"
-            "- tipo\n"
-            "- niveles\n"
-            "- arquitectura\n"
-            "- proporciones\n\n"
-
-            "2. Analiza comportamiento visual:\n"
-            "- puntos focales\n"
-            "- ejes\n"
-            "- impacto\n\n"
-
-            "3. Propón intervención:\n"
-            "- ubicación\n"
-            "- alturas\n"
-            "- distribución\n\n"
-
-            "4. Justifica decisiones\n"
-            "5. Lenguaje comercial\n"
-            "6. Evita lo genérico\n\n"
-
-            "Responde como diseñador profesional."
-        )
-
-    # 🔹 CASO 3: SIN IMÁGENES
+        image_note = "El usuario subió una imagen del espacio."
     else:
-        image_note = (
-            "El usuario no subió imágenes.\n\n"
+        image_note = "El usuario no subió imágenes."
 
-            "OBLIGATORIO:\n\n"
-
-            "1. Pregunta que proyecto quiere revisar:\n"
-            "- narrativa\n"
-            "- estilo (tradicional, elegante, mágico, etc.)\n"
-            "- intención del espacio\n\n"
-
-            "Evita propuestas genéricas. Responde como diseñador experto."
-        )
-
-    # -------- FULL PROMPT --------
     full_prompt = (
         f"Usuario dice:\n{str(user_input)}\n\n"
         f"Contenido del PDF:\n{str(pdf_text)}\n\n"
@@ -634,29 +543,24 @@ if user_input:
     user_message = {
         "role": "user",
         "content": [
-            {
-                "type": "text",
-                "text": full_prompt
-            }
+            {"type": "text", "text": full_prompt}
         ]
     }
 
     for img in image_content:
         user_message["content"].append(img)
 
-    # -------- CONTROL USO --------
+    # -------- CONTROL --------
     import time
 
     if "last_request" not in st.session_state:
         st.session_state.last_request = 0
 
-    current_time = time.time()
-
-    if current_time - st.session_state.last_request < 3:
+    if time.time() - st.session_state.last_request < 3:
         st.warning("⏳ Espera un momento antes de enviar otra solicitud")
         st.stop()
 
-    st.session_state.last_request = current_time
+    st.session_state.last_request = time.time()
 
     # -------- OPENAI --------
     try:
@@ -668,65 +572,20 @@ if user_input:
             ]
         )
 
-        reply = ""
-        if response and response.choices:
-            reply = response.choices[0].message.content
-        else:
-            reply = "No se pudo generar respuesta"
-            
+        reply = response.choices[0].message.content if response.choices else "Error"
+
         st.chat_message("assistant").write(reply)
-        
+
         if HISTORY_FILE:
             with open(HISTORY_FILE, "w") as f:
                 json.dump(st.session_state.messages, f)
-                
+
     except Exception as e:
         st.error(f"Error: {e}")
 
-    # -------- TABLAS --------
-    if reply and "|" in reply:
-        try:
-            lines = reply.split("\n")
-            table_lines = [line for line in lines if "|" in line]
-
-            if len(table_lines) > 2:
-                headers = table_lines[0].split("|")
-                headers = [h.strip() for h in headers if h.strip()]
-
-                data = []
-                for row in table_lines[2:]:
-                    cols = row.split("|")
-                    cols = [c.strip() for c in cols if c.strip()]
-                    if len(cols) == len(headers):
-                        data.append(cols)
-
-                df = pd.DataFrame(data, columns=headers)
-                st.dataframe(df)
-
-        except:
-            pass
-
-
-    # -------- GENERAR IMAGEN CON OPENAI --------
-        # -------- GENERAR IMAGEN CON OPENAI --------
+    # -------- IMAGEN IA --------
     try:
-        image_prompt = f"""
-Render hiperrealista de un centro comercial intervenido con decoración navideña.
-
-Basado en este concepto:
-{reply}
-
-Incluir:
-- iluminación cálida elegante (2700K–3000K)
-- icicle en barandas con caída natural (40cm a 1m)
-- cortinas de luz suspendidas en vacíos
-- materiales premium (metal, vidrio, acrílico)
-- integración arquitectónica realista
-- proporciones correctas
-
-Estilo:
-render tipo fotografía profesional, iluminación cinematográfica, ultra realista.
-"""
+        image_prompt = f"Render hiperrealista basado en: {reply}"
 
         image = client.images.generate(
             model="gpt-image-1",
@@ -734,30 +593,17 @@ render tipo fotografía profesional, iluminación cinematográfica, ultra realis
             size="1024x1024"
         )
 
-        # 🔥 VALIDACIÓN CLAVE
-        if image and image.data and len(image.data) > 0:
-
-            import base64
-
+        if image and image.data:
             img_base64 = image.data[0].b64_json
             img_bytes = base64.b64decode(img_base64)
 
-            st.image(img_bytes, caption="Propuesta generada", use_container_width=True)
+            st.image(img_bytes, use_container_width=True)
 
-            # 🔥 GUARDAR MENSAJE + IMAGEN
             st.session_state.messages.append({
                 "role": "assistant",
                 "content": reply,
                 "image": img_base64
             })
-
-            # 🔥 GUARDAR EN ARCHIVO (AQUÍ, NO ANTES)
-            if HISTORY_FILE:
-                with open(HISTORY_FILE, "w") as f:
-                    json.dump(st.session_state.messages, f)
-            
-        else:
-            st.warning("⚠️ No se generó imagen")
 
     except Exception as e:
         st.error(f"Error generando imagen: {e}")
