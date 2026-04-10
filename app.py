@@ -501,8 +501,7 @@ if uploaded_files:
         st.image(image, width=120)
 col1, col2 = st.columns([1, 8])
 
-with col2:
-    user_input = st.chat_input("Escribe aquí tu idea…")                
+user_input = st.chat_input("Escribe aquí tu idea…")  
 # ✍️ INPUT USUARIO
 
 if user_input:
