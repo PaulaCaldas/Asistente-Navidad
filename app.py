@@ -443,8 +443,7 @@ OBJETIVO:
 Desarrollar propuestas creativas adaptadas a cada cliente, manteniendo criterio profesional, coherencia conceptual y calidad visual.
 """
 # 🧠 MEMORIA
-if "messages" not in st.session_state or not st.session_state.messages:
-
+if "messages" not in st.session_state:
     if HISTORY_FILE and os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE, "r") as f:
             st.session_state.messages = json.load(f)
@@ -455,10 +454,8 @@ if "messages" not in st.session_state or not st.session_state.messages:
 
 # 💬 MOSTRAR CHAT
 for msg in st.session_state.messages[1:]:
-
     if msg["role"] == "user":
         st.chat_message("user").write(msg["content"])
-
     elif msg["role"] == "assistant":
         st.chat_message("assistant").write(msg["content"])
 
@@ -467,7 +464,7 @@ for msg in st.session_state.messages[1:]:
                 img_bytes = base64.b64decode(msg["image"])
                 st.image(img_bytes, use_container_width=True)
             except:
-                st.warning("⚠️ Error cargando imagen guardada")
+                pass
 
 # 📄 PDF
 uploaded_pdf = st.file_uploader("📄 Sube tu brief en PDF", type="pdf")
@@ -478,7 +475,7 @@ if uploaded_pdf:
     for page in reader.pages:
         pdf_text += page.extract_text()
 
-# 🖼 IMÁGENES MULTIPLES
+# 🖼 MULTI IMÁGENES
 uploaded_files = st.file_uploader(
     "",
     type=["png","jpg","jpeg"],
@@ -495,7 +492,7 @@ if uploaded_files:
 # 💬 INPUT
 user_input = st.chat_input("Escribe aquí tu idea…")
 
-# ✍️ INPUT USUARIO
+# 🚀 ENVÍO
 if user_input:
 
     st.chat_message("user").write(user_input)
@@ -505,25 +502,25 @@ if user_input:
         "content": user_input
     })
 
-    # -------- PROMPT --------
+    # CONTEXTO IMÁGENES
     if uploaded_files and len(uploaded_files) > 1:
-        image_note = "El usuario subió varias imágenes del proyecto."
+        image_note = "El usuario subió varias imágenes."
     elif uploaded_files:
-        image_note = "El usuario subió una imagen del espacio."
+        image_note = "El usuario subió una imagen."
     else:
         image_note = "El usuario no subió imágenes."
 
-    full_prompt = (
-        f"Usuario dice:\n{str(user_input)}\n\n"
-        f"Contenido del PDF:\n{str(pdf_text)}\n\n"
-        f"{image_note}\n\n"
-        "Actúa como director creativo senior especializado en diseño navideño.\n"
-        "No des ideas genéricas.\n"
-        "Usa materiales reales.\n"
-        "Justifica decisiones.\n"
-    )
+    full_prompt = f"""
+Usuario dice:
+{user_input}
 
-    # -------- IMÁGENES --------
+PDF:
+{pdf_text}
+
+{image_note}
+"""
+
+    # IMÁGENES
     image_content = []
 
     if uploaded_files:
@@ -539,30 +536,25 @@ if user_input:
                 }
             })
 
-    # -------- MENSAJE --------
     user_message = {
         "role": "user",
-        "content": [
-            {"type": "text", "text": full_prompt}
-        ]
+        "content": [{"type": "text", "text": full_prompt}]
     }
 
     for img in image_content:
         user_message["content"].append(img)
 
-    # -------- CONTROL --------
+    # CONTROL
     import time
-
     if "last_request" not in st.session_state:
         st.session_state.last_request = 0
 
-    if time.time() - st.session_state.last_request < 3:
-        st.warning("⏳ Espera un momento antes de enviar otra solicitud")
+    if time.time() - st.session_state.last_request < 2:
         st.stop()
 
     st.session_state.last_request = time.time()
 
-    # -------- OPENAI --------
+    # OPENAI
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -572,38 +564,37 @@ if user_input:
             ]
         )
 
-        reply = response.choices[0].message.content if response.choices else "Error"
+        reply = response.choices[0].message.content
 
         st.chat_message("assistant").write(reply)
+
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": reply
+        })
 
         if HISTORY_FILE:
             with open(HISTORY_FILE, "w") as f:
                 json.dump(st.session_state.messages, f)
 
     except Exception as e:
-        st.error(f"Error: {e}")
+        st.error(e)
 
-    # -------- IMAGEN IA --------
+    # IMAGEN IA
     try:
-        image_prompt = f"Render hiperrealista basado en: {reply}"
-
         image = client.images.generate(
             model="gpt-image-1",
-            prompt=image_prompt,
+            prompt=reply,
             size="1024x1024"
         )
 
-        if image and image.data:
+        if image.data:
             img_base64 = image.data[0].b64_json
             img_bytes = base64.b64decode(img_base64)
 
             st.image(img_bytes, use_container_width=True)
 
-            st.session_state.messages.append({
-                "role": "assistant",
-                "content": reply,
-                "image": img_base64
-            })
+            st.session_state.messages[-1]["image"] = img_base64
 
-    except Exception as e:
-        st.error(f"Error generando imagen: {e}")
+    except:
+        pass
