@@ -487,12 +487,16 @@ for msg in st.session_state.messages[1:]:
             pdf_text += page.extract_text()
 
     # 🖼 IMAGEN
-    uploaded_image = st.file_uploader("🖼 Sube una imagen (fachada, vacío, referencia)", type=["png","jpg","jpeg"])
-    uploaded_reference = st.file_uploader(
-    "🧩 Sube elemento de referencia (ej: esferas, figuras, luces)",
+    uploaded_files = st.file_uploader(
+    "",
     type=["png","jpg","jpeg"],
-    key="reference"
-)                
+    accept_multiple_files=True,
+    label_visibility="collapsed"
+)       
+    if uploaded_files:
+    for file in uploaded_files:
+        image = Image.open(file)
+        st.image(image, width=120)
 col1, col2 = st.columns([1, 8])
 
 with col1:
@@ -618,9 +622,10 @@ if user_input:
     # -------- IMÁGENES --------
     image_content = []
 
-    if uploaded_image:
-        uploaded_image.seek(0)
-        image_bytes = uploaded_image.read()
+    if uploaded_files:
+    for file in uploaded_files:
+        file.seek(0)
+        image_bytes = file.read()
         image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
         image_content.append({
