@@ -562,9 +562,8 @@ render tipo fotografía profesional, iluminación cinematográfica, ultra realis
         else:
             st.warning("⚠️ No se generó imagen")
 
-    except Exception as e:
-        st.error(f"Error generando imagen: {e}")
-            st.session_state.messages[-1]["image"] = img_base64
+except Exception as e:
+    st.error(f"Error generando imagen: {e}")
 
     except:
         pass
