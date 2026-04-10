@@ -63,12 +63,28 @@ h1 {
     color: gray;
     font-style: italic;
 }
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 500;
+    letter-spacing: 4px;
+
+    color: #f5f5f5;
+
+    text-align: center;
+    margin-bottom: 5px;
+
+    text-shadow: 0 0 20px rgba(255, 210, 160, 0.15);
+}
 </style>
 """, unsafe_allow_html=True)
 
 # 🎄 TÍTULO PERSONALIZADO
-st.title("✨ Tu mano derecha para crear Navidad")
-st.write("Tu asistente creativo para conceptos, storytelling y diseño navideño en centros comerciales.")
+st.markdown('<h1 class="logo">NIVARA</h1>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="subtitle">Dirección creativa para experiencias navideñas en retail</p>',
+    unsafe_allow_html=True
+)
 
 import os
 
