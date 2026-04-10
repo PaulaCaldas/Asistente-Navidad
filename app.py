@@ -179,11 +179,6 @@ section[data-testid="stSidebar"] input {
     color: white;
     border-radius: 8px;
 }
-/* ARREGLAR CAPAS */
-* {
-    position: relative;
-    z-index: 1;
-}
 
 .stApp {
     position: relative;
@@ -230,6 +225,27 @@ section[data-testid="stSidebar"] button:first-child {
     background: #d6c2a8;
     color: #1a1a1a;
     font-weight: 500;
+}
+/* 🔥 FIX PANTALLA NEGRA */
+.stApp {
+    overflow: auto !important;
+    height: auto !important;
+}
+
+/* Evita capas que tapan contenido */
+* {
+    z-index: auto !important;
+}
+
+/* Quitar overlays invisibles */
+.stApp::before {
+    display: none !important;
+}
+
+/* Forzar visibilidad del contenido */
+.main {
+    display: block !important;
+    opacity: 1 !important;
 }
 </style>
 """, unsafe_allow_html=True)
