@@ -211,7 +211,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 st.caption("Listo para diseñar experiencias navideñas 🎄")
-st.write("DEBUG:", len(st.session_state.messages))
+
 import os
 
 # Crear carpeta si no existe
