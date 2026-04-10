@@ -531,7 +531,14 @@ if "messages" not in st.session_state:
         st.session_state.messages = [
             {"role": "system", "content": system_prompt}
         ]
+st.markdown("""
+<div class="welcome">
 
+✨ Hola, soy <b>NIVARA</b><br>
+¿Sobre qué experiencia quieres crear hoy?
+
+</div>
+""", unsafe_allow_html=True)
 # 💬 MOSTRAR CHAT
 for msg in st.session_state.messages[1:]:
 
