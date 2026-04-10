@@ -13,242 +13,196 @@ import os
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # 🎨 ESTILOS (FONDO NUDE + CHAT BONITO)
-st.markdown("""
-<style>
-.stApp {
-    background: linear-gradient(
-        120deg,
-        #0b0b0b 0%,
-        #1a1410 40%,
-        #2a1f17 70%,
-        #0a0a0a 100%
-    );
-}
-.stApp::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-
-    background: radial-gradient(
-        circle at 70% 30%,
-        rgba(255, 200, 150, 0.06),
-        transparent 40%
-    );
-
-    pointer-events: none;
-}
-
-/* Uploaders */
-section[data-testid="stFileUploader"] {
-    background-color: #F5EDE4;
-    border: 1px solid #D6C1B1;
-    border-radius: 12px;
-}
-
-/* Botón upload */
-section[data-testid="stFileUploader"] button {
-    background-color: #B08974;
-    color: white;
-    border-radius: 8px;
-}
-
-/* Texto dentro */
-section[data-testid="stFileUploader"] {
-    color: #333;
-}
-h1 {
-    color: #3a2e2a;
-}
-.chat-placeholder {
-    color: gray;
-    font-style: italic;
-}
-.logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 42px;
-    font-weight: 500;
-    letter-spacing: 4px;
-
-    color: #f5f5f5;
-
-    text-align: center;
-    margin-bottom: 5px;
-
-    text-shadow: 0 0 20px rgba(255, 210, 160, 0.15);
-
-    /* 👇 AGREGA ESTO */
-    opacity: 0;
-    animation: fadeUp 1s ease forwards;
-}
-.subtitle {
-    text-align: center;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    letter-spacing: 1px;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 30px;
-
-    opacity: 0;
-    animation: fadeUp 1.4s ease forwards;
-}
-/* 👇 animación */
-[data-testid="stChatMessage"] {
-    animation: fadeUp 0.5s ease;
-}
-
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-/* CONTENEDOR GENERAL DEL CHAT */
-[data-testid="stChatMessage"] {
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* BURBUJA GENERAL */
-[data-testid="stChatMessage"] > div {
-    padding: 14px 18px;
-    border-radius: 14px;
-    margin-bottom: 10px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-/* USUARIO (derecha) */
-[data-testid="stChatMessage"][data-testid*="user"] > div {
-    background: #d6c2a8;
-    color: #1a1a1a;
-    margin-left: auto;
-    max-width: 70%;
-}
-
-/* ASISTENTE (izquierda) */
-[data-testid="stChatMessage"][data-testid*="assistant"] > div {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: #f1f1f1;
-    margin-right: auto;
-    max-width: 70%;
-}
-
-/* INPUT BOX */
-[data-testid="stChatInput"] {
-    border-radius: 12px;
-}
-
-/* TEXTO INPUT */
-[data-testid="stChatInput"] textarea {
-    background: rgba(255,255,255,0.05);
-    color: #fff;
-    border-radius: 10px;
-}
-/* SIDEBAR FONDO */
-section[data-testid="stSidebar"] {
-    background: linear-gradient(
-        180deg,
-        #0f0f0f 0%,
-        #1a1410 100%
-    );
-    border-right: 1px solid rgba(255,255,255,0.05);
-}
-
-/* TEXTO SIDEBAR */
-section[data-testid="stSidebar"] * {
-    color: #eaeaea;
-    font-family: 'Inter', sans-serif;
-}
-
-/* SELECTBOX */
-section[data-testid="stSidebar"] .stSelectbox {
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-}
-
-/* INPUT */
-section[data-testid="stSidebar"] input {
-    background: rgba(255,255,255,0.05);
-    color: white;
-    border-radius: 8px;
-}
-
-.stApp {
-    position: relative;
-    z-index: 0;
-}
-/* UPLOADER COMPACTO */
-section[data-testid="stFileUploader"] {
-    background: transparent;
-    border: none;
-}
-
-/* BOTÓN */
-section[data-testid="stFileUploader"] button {
-    background: rgba(255,255,255,0.08);
-    border-radius: 8px;
-    height: 40px;
-}
-
-/* INPUT ALINEADO */
-[data-testid="stChatInput"] {
-    margin-top: -10px;
-}
-/* BOTONES PROYECTOS */
-section[data-testid="stSidebar"] button {
-    width: 100%;
-    text-align: left;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 10px;
-    margin-bottom: 6px;
-    padding: 10px;
-
-    transition: all 0.3s ease;
-}
-
-/* HOVER */
-section[data-testid="stSidebar"] button:hover {
-    background: rgba(255,255,255,0.08);
-    transform: translateX(4px);
-}
-
-/* BOTÓN NUEVO */
-section[data-testid="stSidebar"] button:first-child {
-    background: #d6c2a8;
-    color: #1a1a1a;
-    font-weight: 500;
-}
-/* 🔥 FIX PANTALLA NEGRA */
-.stApp {
-    overflow: auto !important;
-    height: auto !important;
-}
-
-/* Evita capas que tapan contenido */
-* {
-    z-index: auto !important;
-}
-
-/* Quitar overlays invisibles */
-.stApp::before {
-    display: none !important;
-}
-
-/* Forzar visibilidad del contenido */
-.main {
-    display: block !important;
-    opacity: 1 !important;
-}
-</style>
-""", unsafe_allow_html=True)
+# st.markdown("""
+# <style>
+# .stApp {
+#     background: linear-gradient(
+#         120deg,
+#         #0b0b0b 0%,
+#         #1a1410 40%,
+#         #2a1f17 70%,
+#         #0a0a0a 100%
+#     );
+# }
+# .stApp::before {
+#     content: "";
+#     position: fixed;
+#     inset: 0;
+#
+#     background: radial-gradient(
+#         circle at 70% 30%,
+#         rgba(255, 200, 150, 0.06),
+#         transparent 40%
+#     );
+#
+#     pointer-events: none;
+# }
+#
+# section[data-testid="stFileUploader"] {
+#     background-color: #F5EDE4;
+#     border: 1px solid #D6C1B1;
+#     border-radius: 12px;
+# }
+#
+# section[data-testid="stFileUploader"] button {
+#     background-color: #B08974;
+#     color: white;
+#     border-radius: 8px;
+# }
+#
+# section[data-testid="stFileUploader"] {
+#     color: #333;
+# }
+#
+# h1 {
+#     color: #3a2e2a;
+# }
+#
+# .chat-placeholder {
+#     color: gray;
+#     font-style: italic;
+# }
+#
+# .logo {
+#     font-family: 'Playfair Display', serif;
+#     font-size: 42px;
+#     font-weight: 500;
+#     letter-spacing: 4px;
+#     color: #f5f5f5;
+#     text-align: center;
+#     margin-bottom: 5px;
+#     text-shadow: 0 0 20px rgba(255, 210, 160, 0.15);
+#     opacity: 0;
+#     animation: fadeUp 1s ease forwards;
+# }
+#
+# .subtitle {
+#     text-align: center;
+#     font-family: 'Inter', sans-serif;
+#     font-size: 14px;
+#     letter-spacing: 1px;
+#     color: rgba(255,255,255,0.6);
+#     margin-bottom: 30px;
+#     opacity: 0;
+#     animation: fadeUp 1.4s ease forwards;
+# }
+#
+# [data-testid="stChatMessage"] {
+#     animation: fadeUp 0.5s ease;
+# }
+#
+# @keyframes fadeUp {
+#     from {
+#         opacity: 0;
+#         transform: translateY(15px);
+#     }
+#     to {
+#         opacity: 1;
+#         transform: translateY(0);
+#     }
+# }
+#
+# [data-testid="stChatMessage"] {
+#     max-width: 800px;
+#     margin-left: auto;
+#     margin-right: auto;
+# }
+#
+# [data-testid="stChatMessage"] > div {
+#     padding: 14px 18px;
+#     border-radius: 14px;
+#     margin-bottom: 10px;
+#     font-family: 'Inter', sans-serif;
+#     font-size: 14px;
+#     line-height: 1.5;
+# }
+#
+# [data-testid="stChatMessage"][data-testid*="user"] > div {
+#     background: #d6c2a8;
+#     color: #1a1a1a;
+#     margin-left: auto;
+#     max-width: 70%;
+# }
+#
+# [data-testid="stChatMessage"][data-testid*="assistant"] > div {
+#     background: rgba(255, 255, 255, 0.04);
+#     border: 1px solid rgba(255,255,255,0.08);
+#     color: #f1f1f1;
+#     margin-right: auto;
+#     max-width: 70%;
+# }
+#
+# [data-testid="stChatInput"] {
+#     border-radius: 12px;
+# }
+#
+# [data-testid="stChatInput"] textarea {
+#     background: rgba(255,255,255,0.05);
+#     color: #fff;
+#     border-radius: 10px;
+# }
+#
+# section[data-testid="stSidebar"] {
+#     background: linear-gradient(
+#         180deg,
+#         #0f0f0f 0%,
+#         #1a1410 100%
+#     );
+#     border-right: 1px solid rgba(255,255,255,0.05);
+# }
+#
+# section[data-testid="stSidebar"] * {
+#     color: #eaeaea;
+#     font-family: 'Inter', sans-serif;
+# }
+#
+# section[data-testid="stSidebar"] input {
+#     background: rgba(255,255,255,0.05);
+#     color: white;
+#     border-radius: 8px;
+# }
+#
+# .stApp {
+#     position: relative;
+#     z-index: 0;
+# }
+#
+# section[data-testid="stFileUploader"] {
+#     background: transparent;
+#     border: none;
+# }
+#
+# section[data-testid="stFileUploader"] button {
+#     background: rgba(255,255,255,0.08);
+#     border-radius: 8px;
+#     height: 40px;
+# }
+#
+# [data-testid="stChatInput"] {
+#     margin-top: -10px;
+# }
+#
+# section[data-testid="stSidebar"] button {
+#     width: 100%;
+#     text-align: left;
+#     background: rgba(255,255,255,0.04);
+#     border: 1px solid rgba(255,255,255,0.05);
+#     border-radius: 10px;
+#     margin-bottom: 6px;
+#     padding: 10px;
+# }
+#
+# section[data-testid="stSidebar"] button:hover {
+#     background: rgba(255,255,255,0.08);
+# }
+#
+# section[data-testid="stSidebar"] button:first-child {
+#     background: #d6c2a8;
+#     color: #1a1a1a;
+# }
+#
+# </style>
+# """, unsafe_allow_html=True)
 
 # 🎄 TÍTULO PERSONALIZADO
 st.markdown('<h1 class="logo">NIVARA</h1>', unsafe_allow_html=True)
