@@ -453,22 +453,6 @@ if "messages" not in st.session_state or not st.session_state.messages:
             {"role": "system", "content": system_prompt}
         ]
 
-    # 📄 PDF
-    uploaded_pdf = st.file_uploader("📄 Sube tu brief en PDF", type="pdf")
-
-    pdf_text = ""
-    if uploaded_pdf:
-        reader = PyPDF2.PdfReader(uploaded_pdf)
-        for page in reader.pages:
-            pdf_text += page.extract_text()
-
-    # 🖼 IMAGEN
-    uploaded_image = st.file_uploader("🖼 Sube una imagen (fachada, vacío, referencia)", type=["png","jpg","jpeg"])
-    uploaded_reference = st.file_uploader(
-    "🧩 Sube elemento de referencia (ej: esferas, figuras, luces)",
-    type=["png","jpg","jpeg"],
-    key="reference"
-)
     if uploaded_image:
         image = Image.open(uploaded_image)
         st.image(image, caption="Referencia cargada", use_column_width=True)
@@ -493,7 +477,22 @@ for msg in st.session_state.messages[1:]:
                 st.image(img_bytes, use_container_width=True)
             except:
                 st.warning("⚠️ Error cargando imagen guardada")
-                
+# 📄 PDF
+    uploaded_pdf = st.file_uploader("📄 Sube tu brief en PDF", type="pdf")
+
+    pdf_text = ""
+    if uploaded_pdf:
+        reader = PyPDF2.PdfReader(uploaded_pdf)
+        for page in reader.pages:
+            pdf_text += page.extract_text()
+
+    # 🖼 IMAGEN
+    uploaded_image = st.file_uploader("🖼 Sube una imagen (fachada, vacío, referencia)", type=["png","jpg","jpeg"])
+    uploaded_reference = st.file_uploader(
+    "🧩 Sube elemento de referencia (ej: esferas, figuras, luces)",
+    type=["png","jpg","jpeg"],
+    key="reference"
+)                
 col1, col2 = st.columns([1, 8])
 
 with col1:
@@ -522,7 +521,7 @@ if user_input:
     image_note = ""
 
     # 🔹 CASO 1: DOS IMÁGENES
-    if uploaded_image and uploaded_reference:
+    if uploaded_image:
         image_note = (
             "El usuario subió dos imágenes:\n"
             "1. Imagen del espacio\n"
