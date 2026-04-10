@@ -274,6 +274,38 @@ h1 {
     margin-right: auto;
     max-width: 70%;
 }
+/* 🎯 HERO CENTRADO */
+.hero {
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
+
+/* LOGO NIVARA */
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    letter-spacing: 4px;
+    color: #f5f5f5;
+    margin-bottom: 10px;
+
+    text-shadow: 0 0 25px rgba(255, 210, 160, 0.15);
+}
+
+/* SUBTÍTULO */
+.subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 8px;
+}
+
+/* TAGLINE */
+.tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -283,7 +315,6 @@ st.markdown(
     '<p class="subtitle">Dirección creativa para experiencias navideñas en retail</p>',
     unsafe_allow_html=True
 )
-st.caption("Listo para diseñar experiencias navideñas 🎄")
 
 import os
 
@@ -490,15 +521,8 @@ Desarrollar propuestas creativas adaptadas a cada cliente, manteniendo criterio 
 if "messages" not in st.session_state:
 
     st.session_state.messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "assistant", "content": "Hola, soy NIVARA ✨ ¿Qué proyecto quieres diseñar hoy?"}
+        {"role": "system", "content": system_prompt}
     ]
-
-elif not st.session_state.messages:
-
-    st.session_state.messages.append(
-        {"role": "assistant", "content": "Hola, soy NIVARA ✨ ¿Qué proyecto quieres diseñar hoy?"}
-    )
 
     if HISTORY_FILE and os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE, "r") as f:
