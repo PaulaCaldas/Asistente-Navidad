@@ -534,8 +534,8 @@ if "messages" not in st.session_state:
 st.markdown("""
 <div class="welcome">
 
-✨ Hola, soy <b>NIVARA</b><br>
-¿Sobre qué experiencia quieres crear hoy?
+Hola, soy <b>NIVARA</b><br>
+¿Qué experiencia crearemos para esta Navidad?
 
 </div>
 """, unsafe_allow_html=True)
