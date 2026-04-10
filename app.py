@@ -75,6 +75,31 @@ h1 {
     margin-bottom: 5px;
 
     text-shadow: 0 0 20px rgba(255, 210, 160, 0.15);
+
+    /* 👇 AGREGA ESTO */
+    opacity: 0;
+    animation: fadeUp 1s ease forwards;
+}
+.subtitle {
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 30px;
+
+    opacity: 0;
+    animation: fadeUp 1.4s ease forwards;
+}
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>
 """, unsafe_allow_html=True)
