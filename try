@@ -1,0 +1,36 @@
+import streamlit as st
+from openai import OpenAI
+import base64
+from PIL import Image
+import PyPDF2
+
+st.title("TEST NIVARA")
+
+# PDF
+uploaded_pdf = st.file_uploader("PDF", type="pdf")
+
+pdf_text = ""
+if uploaded_pdf:
+    reader = PyPDF2.PdfReader(uploaded_pdf)
+    for page in reader.pages:
+        pdf_text += page.extract_text()
+
+# MULTI IMAGEN
+uploaded_files = st.file_uploader(
+    "Imágenes",
+    type=["png","jpg","jpeg"],
+    accept_multiple_files=True
+)
+
+if uploaded_files:
+    for file in uploaded_files:
+        image = Image.open(file)
+        st.image(image)
+
+# INPUT
+user_input = st.chat_input("Escribe")
+
+if user_input:
+    st.write("Texto:", user_input)
+    st.write("PDF:", pdf_text[:200])
+    st.write("Imágenes:", len(uploaded_files) if uploaded_files else 0)
