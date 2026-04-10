@@ -478,33 +478,28 @@ for msg in st.session_state.messages[1:]:
             except:
                 st.warning("⚠️ Error cargando imagen guardada")
 # 📄 PDF
-    uploaded_pdf = st.file_uploader("📄 Sube tu brief en PDF", type="pdf")
+uploaded_pdf = st.file_uploader("📄 Sube tu brief en PDF", type="pdf")
 
-    pdf_text = ""
-    if uploaded_pdf:
-        reader = PyPDF2.PdfReader(uploaded_pdf)
-        for page in reader.pages:
-            pdf_text += page.extract_text()
+pdf_text = ""
+if uploaded_pdf:
+    reader = PyPDF2.PdfReader(uploaded_pdf)
+    for page in reader.pages:
+        pdf_text += page.extract_text()
 
-    # 🖼 IMAGEN
-    uploaded_files = st.file_uploader(
+# 🖼 IMÁGENES (MULTIPLE)
+uploaded_files = st.file_uploader(
     "",
     type=["png","jpg","jpeg"],
     accept_multiple_files=True,
     label_visibility="collapsed"
-)       
-    if uploaded_files:
+)
+
+# 👀 PREVIEW
+if uploaded_files:
     for file in uploaded_files:
         image = Image.open(file)
         st.image(image, width=120)
 col1, col2 = st.columns([1, 8])
-
-with col1:
-    uploaded_image = st.file_uploader(
-        "",
-        type=["png","jpg","jpeg","pdf"],
-        label_visibility="collapsed"
-    )
 
 with col2:
     user_input = st.chat_input("Escribe aquí tu idea…")                
@@ -525,7 +520,7 @@ if user_input:
     image_note = ""
 
     # 🔹 CASO 1: DOS IMÁGENES
-    if uploaded_image:
+    if uploaded_files and len(uploaded_files) > 1:
         image_note = (
             "El usuario subió dos imágenes:\n"
             "1. Imagen del espacio\n"
@@ -564,7 +559,7 @@ if user_input:
         )
 
     # 🔹 CASO 2: SOLO ESPACIO
-    elif uploaded_image:
+    elif uploaded_files:
         image_note = (
             "El usuario subió una imagen del espacio.\n\n"
 
@@ -632,18 +627,6 @@ if user_input:
             "type": "image_url",
             "image_url": {
                 "url": f"data:image/png;base64,{image_base64}"
-            }
-        })
-
-    if uploaded_reference:
-        uploaded_reference.seek(0)
-        ref_bytes = uploaded_reference.read()
-        ref_base64 = base64.b64encode(ref_bytes).decode("utf-8")
-
-        image_content.append({
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/png;base64,{ref_base64}"
             }
         })
 
