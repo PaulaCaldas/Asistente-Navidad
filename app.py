@@ -453,10 +453,6 @@ if "messages" not in st.session_state or not st.session_state.messages:
             {"role": "system", "content": system_prompt}
         ]
 
-    if uploaded_image:
-        image = Image.open(uploaded_image)
-        st.image(image, caption="Referencia cargada", use_column_width=True)
-
 # 💬 MOSTRAR CHAT
 for msg in st.session_state.messages[1:]:
 
@@ -708,7 +704,6 @@ if user_input:
 
 
     # -------- GENERAR IMAGEN CON OPENAI --------
-        # -------- GENERAR IMAGEN CON OPENAI --------
     try:
         image_prompt = f"""
 Render hiperrealista de un centro comercial intervenido con decoración navideña.
